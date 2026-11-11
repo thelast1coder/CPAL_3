@@ -1,8 +1,8 @@
 # STATUS
 
 ## Now
-P0 (laptop) code, tests and tiny run done. Waiting for: git identity and remote URL (to commit and
-push), decisions on open questions Q1 to Q4 (`docs/decisions.md`), then the VM.
+P0 code, tests and tiny run done and pushed. Waiting for: decisions on open questions Q1 to Q4
+(`docs/decisions.md`), then the VM.
 
 ## Done (P0)
 - Repository layout, packaging, requirements (VM and CPU).
@@ -15,13 +15,13 @@ push), decisions on open questions Q1 to Q4 (`docs/decisions.md`), then the VM.
 - Tiny end-to-end run: `results/tiny/KILL_REPORT.md` (TINY, numbers meaningless).
 
 ## PREREG commit
-- Hash: (pending: first commit blocked until git user.name and user.email are set)
+- Draft PREREG commit: 55d84fc (not frozen: Q1 to Q4 open). The frozen hash is recorded here before the first real-model run.
 
 ## Next (P1, VM)
 See README "VM: first commands for P1". Stop after K0 and report.
 
 ## Blockers
-- Git identity not configured on the laptop; no remote URL yet.
+- None for git (repo-local identity thelast1coder with the GitHub no-reply address).
 - Q1 (which circuit-tracer source), Q2 (PLT transcoder repository ID), Q4 (unverified rhyme prompt)
   should be settled before the PREREG commit freezes prompts and configs.
 
