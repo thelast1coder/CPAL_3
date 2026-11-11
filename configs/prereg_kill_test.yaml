@@ -1,0 +1,33 @@
+prereg_version: 1
+model: gemma2_2b
+transcoder_sets: [plt, clt426k]
+prompts: {test: 32, validation: 4, long: 8}
+seeds: [0, 1, 2]
+certification_probes: 16
+fidelity:
+  influence_weighted_node_recall_at_least: 0.95
+  node_jaccard_at_least: 0.85
+  seeds_required: 2
+k1:
+  statistic: share_of_test_prompts_by_energy_weighted_median_column_s95
+  go: {s95_fraction_of_T_at_most: 0.01, prompt_share_at_least: 0.70}
+  nogo: {s95_fraction_of_T_above: 0.10, prompt_share_at_least: 0.70}
+k2:
+  primary_variant: cct_fast
+  cct_budgets_m: [64, 128, 256, 512, 1024]
+  b1_budgets_rows: [64, 128, 256, 512, 1024, 2048, 4096, T_D]
+  c75_prompt_share: 0.75
+  go: {s_exact_at_least: 10.0, s_b1_at_least: 3.0}
+  amber: {s_exact_at_least: 4.0, s_b1_at_least: 1.5}
+  nogo: "otherwise, or CCT never reaches the 75% fidelity rate on its grid"
+  upgrade_to_go_f: "if K2 is AMBER on both sets in regime D but regime F gives s_exact >= 20 and s_b1 >= 3 on at least one set"
+k3:
+  prompts: 8
+  repeats: 3
+  go: {prompts_meeting_fidelity_at_least: 6, wallclock_speedup_at_least: 5.0, real_vs_simulated_rel_frobenius_at_most: {fp32: 0.01, bf16: 0.05}}
+  amber: {prompts_meeting_fidelity_at_least: 5, wallclock_speedup_at_least: 2.5}
+  nogo: "otherwise"
+decision:
+  go: "K2 GO or GO-F on at least one set and not NO-GO on the other; K3 GO on that set; K1 not NO-GO on that set"
+  nogo: "K1 NO-GO on both sets, or K2 NO-GO on both sets, or K3 NO-GO"
+  amber: "anything else"

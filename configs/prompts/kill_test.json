@@ -1,0 +1,258 @@
+[
+  {
+    "category": "two_hop",
+    "prompt": "Fact: the capital of the state containing Dallas is",
+    "expected": " Austin",
+    "source": "verified",
+    "note": "transformer-circuits.pub/2025/attribution-graphs/biology.html",
+    "id": "kill_test_00"
+  },
+  {
+    "category": "two_hop",
+    "prompt": "Fact: the currency of the country whose capital is Tokyo is the",
+    "expected": " yen",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_01"
+  },
+  {
+    "category": "two_hop",
+    "prompt": "Fact: the language spoken in the country whose capital is Lisbon is",
+    "expected": " Portuguese",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_02"
+  },
+  {
+    "category": "two_hop",
+    "prompt": "Fact: the continent containing the country whose capital is Nairobi is",
+    "expected": " Africa",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_03"
+  },
+  {
+    "category": "single_hop",
+    "prompt": "Fact: Michael Jordan plays the sport of",
+    "expected": " basketball",
+    "source": "verified",
+    "note": "transformer-circuits.pub/2025/attribution-graphs/methods.html",
+    "id": "kill_test_04"
+  },
+  {
+    "category": "single_hop",
+    "prompt": "Fact: Serena Williams plays the sport of",
+    "expected": " tennis",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_05"
+  },
+  {
+    "category": "single_hop",
+    "prompt": "Fact: the capital of France is",
+    "expected": " Paris",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_06"
+  },
+  {
+    "category": "single_hop",
+    "prompt": "Fact: the Eiffel Tower is located in the city of",
+    "expected": " Paris",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_07"
+  },
+  {
+    "category": "antonym",
+    "prompt": "Le contraire de \"petit\" est \"",
+    "expected": "grand",
+    "source": "verified",
+    "note": "transformer-circuits.pub/2025/attribution-graphs/biology.html",
+    "id": "kill_test_08"
+  },
+  {
+    "category": "antonym",
+    "prompt": "The opposite of \"small\" is \"",
+    "expected": "big",
+    "source": "verified",
+    "note": "transformer-circuits.pub/2025/attribution-graphs/biology.html",
+    "id": "kill_test_09"
+  },
+  {
+    "category": "antonym",
+    "prompt": "The opposite of \"hot\" is \"",
+    "expected": "cold",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_10"
+  },
+  {
+    "category": "antonym",
+    "prompt": "Le contraire de \"chaud\" est \"",
+    "expected": "froid",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_11"
+  },
+  {
+    "category": "addition",
+    "prompt": "calc: 36+59=",
+    "expected": "95",
+    "source": "verified",
+    "note": "transformer-circuits.pub/2025/attribution-graphs/methods.html",
+    "id": "kill_test_12"
+  },
+  {
+    "category": "addition",
+    "prompt": "calc: 23+41=",
+    "expected": "64",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_13"
+  },
+  {
+    "category": "addition",
+    "prompt": "calc: 17+68=",
+    "expected": "85",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_14"
+  },
+  {
+    "category": "addition",
+    "prompt": "calc: 45+38=",
+    "expected": "83",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_15"
+  },
+  {
+    "category": "acronym",
+    "prompt": "The National Digital Analytics Group (N",
+    "expected": "DAG",
+    "source": "verified",
+    "note": "transformer-circuits.pub/2025/attribution-graphs/methods.html",
+    "id": "kill_test_16"
+  },
+  {
+    "category": "acronym",
+    "prompt": "The International Advanced Security Group (IAS",
+    "expected": "G",
+    "source": "verified",
+    "note": "github.com/decoderesearch/circuit-tracer README",
+    "id": "kill_test_17"
+  },
+  {
+    "category": "acronym",
+    "prompt": "The Central Data Processing Unit (C",
+    "expected": "DPU",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_18"
+  },
+  {
+    "category": "acronym",
+    "prompt": "The Global Energy Research Council (G",
+    "expected": "ERC",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_19"
+  },
+  {
+    "category": "rhyme",
+    "prompt": "A rhyming couplet:\nHe saw a carrot and had to grab it,\n",
+    "expected": " His",
+    "source": "unverified",
+    "note": "modelled on the Lindsey et al. 2025 planning example; exact string NOT found (verify)",
+    "id": "kill_test_20"
+  },
+  {
+    "category": "rhyme",
+    "prompt": "A rhyming couplet:\nThe sun went down behind the hill,\n",
+    "expected": " The",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_21"
+  },
+  {
+    "category": "rhyme",
+    "prompt": "A rhyming couplet:\nThe cat sat sleeping on the mat,\n",
+    "expected": " And",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_22"
+  },
+  {
+    "category": "rhyme",
+    "prompt": "A rhyming couplet:\nI walked along the sandy shore,\n",
+    "expected": " And",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_23"
+  },
+  {
+    "category": "agreement",
+    "prompt": "The keys to the old cabinet",
+    "expected": " are",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_24"
+  },
+  {
+    "category": "agreement",
+    "prompt": "The author of the famous novels",
+    "expected": " is",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_25"
+  },
+  {
+    "category": "agreement",
+    "prompt": "The dogs that chased the cat",
+    "expected": " were",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_26"
+  },
+  {
+    "category": "agreement",
+    "prompt": "The teacher of the young students",
+    "expected": " is",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_27"
+  },
+  {
+    "category": "code",
+    "prompt": "def add(a, b):\n    return a",
+    "expected": " +",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_28"
+  },
+  {
+    "category": "code",
+    "prompt": "for i in range(10):\n    print(",
+    "expected": "i",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_29"
+  },
+  {
+    "category": "code",
+    "prompt": "import numpy as",
+    "expected": " np",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_30"
+  },
+  {
+    "category": "code",
+    "prompt": "x = [1, 2, 3]\ny = len(",
+    "expected": "x",
+    "source": "project",
+    "note": "",
+    "id": "kill_test_31"
+  }
+]

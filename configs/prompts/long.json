@@ -1,0 +1,66 @@
+[
+  {
+    "category": "long",
+    "prompt": "The lighthouse on the northern cape was built in 1871 by a team of stonemasons from the nearby fishing village. For more than a century it guided boats through a narrow channel between two reefs, and the keeper's family lived in a small cottage at its base. In winter the keeper climbed the spiral stairs every four hours to trim the wick and wind the clockwork that turned the lens. When the light was automated in 1984, the cottage was turned into a museum that displays the original logbooks, a brass foghorn and photographs of the storms that battered the coast. Visitors can still climb the tower on summer weekends, and on a clear day they can see the islands far to the west.\n\nQuestion: In which year was the lighthouse automated?\nAnswer:",
+    "expected": " 1984",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_00"
+  },
+  {
+    "category": "long",
+    "prompt": "Mira grew tomatoes, beans and courgettes in a community garden at the edge of the town. Each plot was rented for a small yearly fee, and the gardeners shared a shed full of tools, a rainwater tank and a compost heap that was turned every Saturday morning. Mira kept a notebook in which she recorded the date of every sowing, the weather and the size of each harvest. One year a late frost killed most of the young tomato plants, so she replanted them in pots on her kitchen windowsill and moved them outside in early June. By the end of the summer she had harvested more beans than anyone else, and she gave the extra jars of pickled beans to her neighbours.\n\nQuestion: Which vegetable did Mira replant in pots?\nAnswer:",
+    "expected": " Tomatoes",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_01"
+  },
+  {
+    "category": "long",
+    "prompt": "The river valley was once home to a busy wool trade. Sheep grazed on the hills, and the fleece was carried down to mills powered by water wheels. The largest mill employed nearly three hundred workers, many of them children, who worked long shifts beside the noisy looms. When steam engines arrived, the mills moved closer to the coal fields and the valley grew quiet. Today the old mill has been restored as a heritage centre. Its water wheel turns again, a small loom weaves blankets for the gift shop, and schoolchildren visit to learn how cloth was made two hundred years ago. A footpath follows the river from the mill to the ruins of a stone bridge.\n\nQuestion: What powered the mills in the valley?\nAnswer:",
+    "expected": " Water",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_02"
+  },
+  {
+    "category": "long",
+    "prompt": "Tomas had always wanted to cross the mountains on foot, so after finishing his exams he packed a tent, a stove and enough food for ten days. He started in a village at the foot of the range and followed an old trading path that climbed through pine forests to a high pass. On the third day a thunderstorm forced him to shelter in a shepherd's hut, where an old man shared bread and cheese and told him stories about the smugglers who once used the same path. After the storm the air was cold and clear. Tomas reached the pass on the fifth day and looked down at the lakes on the other side, glittering in the evening light.\n\nQuestion: Where did Tomas shelter during the thunderstorm?\nAnswer: In a",
+    "expected": " shepherd",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_03"
+  },
+  {
+    "category": "long",
+    "prompt": "The city library opened a new reading room last spring. It has tall windows facing the park, long oak tables, and a section devoted to maps and local history. Librarians organise a talk every Thursday evening, and the most popular one so far was about the canals that once carried coal through the city centre. The room also holds a collection of letters written by a nineteenth-century engineer who designed several of the city's bridges. Researchers must book a seat in advance and handle the letters with cotton gloves. On the first Sunday of each month the room is open to families, and children can try writing with quill pens and ink.\n\nQuestion: On which evening are the talks held?\nAnswer:",
+    "expected": " Thursday",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_04"
+  },
+  {
+    "category": "long",
+    "prompt": "Every autumn thousands of cranes stop at the marshes near the lake on their way south. They arrive in long, noisy lines and spend several weeks feeding on grain left in the surrounding fields. Volunteers count the birds at dawn from wooden hides along the shore, and the counts have been recorded every year since 1972. The numbers fell sharply in the 1980s, when much of the marsh was drained for farming, but they rose again after part of the land was flooded and turned into a reserve. Last year the volunteers counted more cranes than in any previous year, and a small festival now celebrates their arrival with walks, talks and a market.\n\nQuestion: Which birds stop at the marshes each autumn?\nAnswer:",
+    "expected": " Cr",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_05"
+  },
+  {
+    "category": "long",
+    "prompt": "The bakery on the corner of the market square has been run by the same family for four generations. The ovens are lit at three o'clock every morning, and the first loaves are ready before the market stalls open. The family is known for a dark rye bread flavoured with caraway seeds, a recipe brought from the grandfather's home town. On Fridays they also bake a sweet plaited loaf that sells out within an hour. When a supermarket opened on the edge of town, many people expected the bakery to close, but its customers stayed loyal, and the youngest daughter has recently started teaching bread-making classes on Saturday afternoons.\n\nQuestion: Which seeds flavour the dark rye bread?\nAnswer:",
+    "expected": " Car",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_06"
+  },
+  {
+    "category": "long",
+    "prompt": "The observatory sits on a ridge far from the lights of any town. Its largest telescope has a mirror more than two metres wide, and astronomers book time on it months in advance. On a typical night the dome opens at dusk, the telescope tracks a list of faint galaxies, and the data are sent to a university several hundred kilometres away. In the summer the observatory hosts a public open evening. Visitors queue to look through a smaller telescope at the rings of Saturn and the craters of the Moon, while a guide explains how the light from distant stars can take millions of years to reach the Earth. Hot chocolate is served in the visitor centre.\n\nQuestion: Which planet's rings do visitors look at?\nAnswer:",
+    "expected": " Saturn",
+    "source": "project",
+    "note": "original paragraph (not WikiText-2; no dataset downloads in P0)",
+    "id": "long_07"
+  }
+]

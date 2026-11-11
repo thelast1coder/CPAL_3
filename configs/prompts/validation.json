@@ -1,0 +1,34 @@
+[
+  {
+    "category": "translation",
+    "prompt": "English: cheese\nFrench:",
+    "expected": " fromage",
+    "source": "project",
+    "note": "",
+    "id": "validation_00"
+  },
+  {
+    "category": "induction",
+    "prompt": "Alice met Bob at the market. Later that day, Alice met",
+    "expected": " Bob",
+    "source": "project",
+    "note": "",
+    "id": "validation_01"
+  },
+  {
+    "category": "date",
+    "prompt": "The day after Monday is",
+    "expected": " Tuesday",
+    "source": "project",
+    "note": "",
+    "id": "validation_02"
+  },
+  {
+    "category": "unit_conversion",
+    "prompt": "One kilometre is equal to 1000",
+    "expected": " metres",
+    "source": "project",
+    "note": "",
+    "id": "validation_03"
+  }
+]
