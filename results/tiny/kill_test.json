@@ -1,0 +1,162 @@
+{
+  "verdict": {
+    "verdict": "NO-GO",
+    "set": null
+  },
+  "k1": {
+    "tiny_plt": {
+      "verdict": "NO-GO",
+      "share_go": 0.0,
+      "share_nogo": 0.875,
+      "n_prompts": 8
+    },
+    "tiny_clt": {
+      "verdict": "NO-GO",
+      "share_go": 0.0,
+      "share_nogo": 1.0,
+      "n_prompts": 8
+    }
+  },
+  "k2": {
+    "tiny_plt": {
+      "verdict": "NO-GO",
+      "reason": "CCT never reaches the 75% fidelity rate on its grid",
+      "s_exact": null,
+      "s_b1": null
+    },
+    "tiny_clt": {
+      "verdict": "NO-GO",
+      "s_exact": 0.4961506109441215,
+      "s_b1": 0.4961506109441215
+    }
+  },
+  "k3": {
+    "tiny_plt": {
+      "verdict": "NO-GO",
+      "n_meet": 0,
+      "speedup": 1.1931056198125292,
+      "rel_frob": 2.6584426636083778e-08,
+      "rel_frob_tol": 0.01
+    },
+    "tiny_clt": {
+      "verdict": "NO-GO",
+      "n_meet": 4,
+      "speedup": 1.4097793681378987,
+      "rel_frob": 2.6712667506726008e-08,
+      "rel_frob_tol": 0.01
+    }
+  },
+  "tiny": true,
+  "run_record": {
+    "config": {
+      "prereg": {
+        "prereg_version": 1,
+        "model": "gemma2_2b",
+        "transcoder_sets": [
+          "plt",
+          "clt426k"
+        ],
+        "prompts": {
+          "test": 32,
+          "validation": 4,
+          "long": 8
+        },
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "certification_probes": 16,
+        "fidelity": {
+          "influence_weighted_node_recall_at_least": 0.95,
+          "node_jaccard_at_least": 0.85,
+          "seeds_required": 2
+        },
+        "k1": {
+          "statistic": "share_of_test_prompts_by_energy_weighted_median_column_s95",
+          "go": {
+            "s95_fraction_of_T_at_most": 0.01,
+            "prompt_share_at_least": 0.7
+          },
+          "nogo": {
+            "s95_fraction_of_T_above": 0.1,
+            "prompt_share_at_least": 0.7
+          }
+        },
+        "k2": {
+          "primary_variant": "cct_fast",
+          "cct_budgets_m": [
+            64,
+            128,
+            256,
+            512,
+            1024
+          ],
+          "b1_budgets_rows": [
+            64,
+            128,
+            256,
+            512,
+            1024,
+            2048,
+            4096,
+            "T_D"
+          ],
+          "c75_prompt_share": 0.75,
+          "go": {
+            "s_exact_at_least": 10.0,
+            "s_b1_at_least": 3.0
+          },
+          "amber": {
+            "s_exact_at_least": 4.0,
+            "s_b1_at_least": 1.5
+          },
+          "nogo": "otherwise, or CCT never reaches the 75% fidelity rate on its grid",
+          "upgrade_to_go_f": "if K2 is AMBER on both sets in regime D but regime F gives s_exact >= 20 and s_b1 >= 3 on at least one set"
+        },
+        "k3": {
+          "prompts": 8,
+          "repeats": 3,
+          "go": {
+            "prompts_meeting_fidelity_at_least": 6,
+            "wallclock_speedup_at_least": 5.0,
+            "real_vs_simulated_rel_frobenius_at_most": {
+              "fp32": 0.01,
+              "bf16": 0.05
+            }
+          },
+          "amber": {
+            "prompts_meeting_fidelity_at_least": 5,
+            "wallclock_speedup_at_least": 2.5
+          },
+          "nogo": "otherwise"
+        },
+        "decision": {
+          "go": "K2 GO or GO-F on at least one set and not NO-GO on the other; K3 GO on that set; K1 not NO-GO on that set",
+          "nogo": "K1 NO-GO on both sets, or K2 NO-GO on both sets, or K3 NO-GO",
+          "amber": "anything else"
+        }
+      }
+    },
+    "seed": null,
+    "git": {
+      "hash": "HEAD",
+      "dirty": true
+    },
+    "packages": {
+      "python": "3.12.1",
+      "torch": "2.15.0+cpu",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "circuit_tracer": null,
+      "transformer_lens": null,
+      "nnsight": null,
+      "transformers": null,
+      "huggingface_hub": null,
+      "yaml": "6.0.3"
+    },
+    "gpu": "cpu (AMD64)",
+    "wall_seconds": null,
+    "utc": "2026-11-10T18:58:07+00:00"
+  }
+}

@@ -1,0 +1,6 @@
+# Laptop (CPU only). torch from https://download.pytorch.org/whl/cpu
+torch
+numpy
+scipy
+pyyaml
+pytest

@@ -1,0 +1,13 @@
+# VM (H100). Install torch with the CUDA build first (see scripts/vm_setup.sh).
+# circuit-tracer pinned (docs/decisions.md, D-impl-1). Its backend dependencies
+# (transformer-lens, nnsight, transformers, einops, safetensors) are resolved by pip on the VM;
+# vm_setup.sh writes the resolved versions to results/vm_pip_freeze.txt.
+circuit-tracer==0.5.0
+huggingface_hub
+numpy
+scipy
+pandas
+matplotlib
+pyyaml
+pytest
+tqdm

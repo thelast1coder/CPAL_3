@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: cct
+Version: 0.1.0
+Summary: Compressed Circuit Tracing: attribution graphs from a few mixed backward passes
+Requires-Python: >=3.10
+Requires-Dist: torch
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pyyaml

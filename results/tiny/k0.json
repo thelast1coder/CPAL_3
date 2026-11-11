@@ -1,0 +1,171 @@
+{
+  "config": {
+    "model": {
+      "n_layers": 4,
+      "d_model": 32,
+      "n_heads": 2,
+      "d_head": 16,
+      "vocab": 64,
+      "d_mlp": 64,
+      "n_features": 64
+    },
+    "transcoder_sets": [
+      "plt",
+      "clt"
+    ],
+    "n_test": 8,
+    "n_validation": 2,
+    "n_long": 2,
+    "prompt_lengths": [
+      8,
+      12
+    ],
+    "long_lengths": [
+      16,
+      20
+    ],
+    "max_feature_nodes": 150,
+    "batch_size": 64,
+    "cct_m": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "b1_rows": [
+      16,
+      32,
+      64,
+      128,
+      "T_D"
+    ],
+    "grid": {
+      "recovery.algo": [
+        "omp",
+        "cosamp"
+      ],
+      "recovery.k_max": [
+        8,
+        16
+      ],
+      "screening.q": [
+        0.995
+      ],
+      "hubs.rho_hub": [
+        0.3
+      ],
+      "hubs.budget": [
+        32,
+        128
+      ]
+    },
+    "recovery_device": "cpu",
+    "row_seconds": null,
+    "kappa": null
+  },
+  "seed": 0,
+  "git": {
+    "hash": "HEAD",
+    "dirty": true
+  },
+  "packages": {
+    "python": "3.12.1",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "circuit_tracer": null,
+    "transformer_lens": null,
+    "nnsight": null,
+    "transformers": null,
+    "huggingface_hub": null,
+    "yaml": "6.0.3"
+  },
+  "gpu": "cpu (AMD64)",
+  "wall_seconds": 8.95148879988119,
+  "utc": "2026-11-10T18:54:35+00:00",
+  "sets": {
+    "tiny_plt": {
+      "checks": {
+        "K0.1": {
+          "value": 2.671186321212946e-15,
+          "pass": true
+        },
+        "K0.2": {
+          "value": 6.718785897615217e-16,
+          "pass": true
+        },
+        "K0.3": {
+          "value": 3.6301002289379823e-16,
+          "pass": true,
+          "mode": "forward_ad"
+        },
+        "K0.4": {
+          "value": true,
+          "pass": true
+        },
+        "K0.5": {
+          "value": {
+            "row_seconds": 0.0001927015619003214,
+            "kappa": 3.725960659325548,
+            "batch": 64,
+            "recovery_columns_per_second": 1201.0400258440545
+          },
+          "pass": true
+        },
+        "K0.6": {
+          "value": true,
+          "pass": true
+        }
+      },
+      "timing": {
+        "row_seconds": 0.0001927015619003214,
+        "kappa": 3.725960659325548,
+        "batch": 64,
+        "recovery_columns_per_second": 1201.0400258440545
+      },
+      "dtype": "float64"
+    },
+    "tiny_clt": {
+      "checks": {
+        "K0.1": {
+          "value": 3.3223589934377343e-15,
+          "pass": true
+        },
+        "K0.2": {
+          "value": 6.871872152179828e-16,
+          "pass": true
+        },
+        "K0.3": {
+          "value": 5.971970892947983e-16,
+          "pass": true,
+          "mode": "forward_ad"
+        },
+        "K0.4": {
+          "value": true,
+          "pass": true
+        },
+        "K0.5": {
+          "value": {
+            "row_seconds": 0.0002626343703013845,
+            "kappa": 1.8852373711543486,
+            "batch": 64,
+            "recovery_columns_per_second": 1552.5581877101283
+          },
+          "pass": true
+        },
+        "K0.6": {
+          "value": true,
+          "pass": true
+        }
+      },
+      "timing": {
+        "row_seconds": 0.0002626343703013845,
+        "kappa": 1.8852373711543486,
+        "batch": 64,
+        "recovery_columns_per_second": 1552.5581877101283
+      },
+      "dtype": "float64"
+    }
+  },
+  "tiny": true
+}

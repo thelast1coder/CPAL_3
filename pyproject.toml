@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cct"
+version = "0.1.0"
+description = "Compressed Circuit Tracing: attribution graphs from a few mixed backward passes"
+requires-python = ">=3.10"
+dependencies = ["torch", "numpy", "scipy", "pyyaml"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["slow: end-to-end tiny run (minutes)"]

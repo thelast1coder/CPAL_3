@@ -1,0 +1,23 @@
+# Gemma-2-2B with per-layer transcoders (PLT). Fields marked (verify) are filled from the downloaded
+# files by scripts/download_models.py and at K0 on the VM, never from memory.
+name: gemma2_2b_plt
+model_name: google/gemma-2-2b
+# PROJECT.md lists mntss/gemma-scope-transcoders. circuit-tracer 0.5.0's preset "gemma" resolves to
+# mwhanna/gemma-scope-transcoders (utils/hf_utils.py, load_transcoder_from_hub). Decision pending with
+# Dawar before any download (docs/decisions.md, open question Q2).
+transcoder_set: mwhanna/gemma-scope-transcoders
+transcoder_set_spec: mntss/gemma-scope-transcoders
+transcoder_type: plt
+backend: transformerlens
+dtype: null            # D10, decided at K0 (float32 if it fits under the cap, else bfloat16)
+memory_cap_gb: 30      # agree with the other projects before K0
+revisions: {model: null, transcoders: null}   # (verify) written by download_models.py
+n_layers: null         # (verify) from the downloaded config
+d_model: null          # (verify)
+d_transcoder: null     # (verify)
+timing:                # K0.5, median of 3 repeats
+  row_seconds: null
+  kappa: null
+  recovery_columns_per_second: null
+  exact_default_wall_seconds: null
+  exact_default_peak_gb: null

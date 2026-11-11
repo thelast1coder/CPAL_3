@@ -1,0 +1,15 @@
+.venv*/
+artifacts/
+logs/
+*.pt
+*.safetensors
+*.npz
+*.npy
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.token
+*token*.txt
+hf_cache/
+results/tiny/*.pt

@@ -1,0 +1,19 @@
+# Gemma-2-2B with the 426k cross-layer transcoder. (verify) fields filled on the VM.
+name: gemma2_2b_clt426k
+model_name: google/gemma-2-2b
+transcoder_set: mntss/clt-gemma-2-2b-426k   # (verify) repository exists and loads with circuit-tracer 0.5.0
+transcoder_type: clt
+backend: transformerlens
+dtype: null            # D10, decided at K0
+memory_cap_gb: 30
+lazy_decoder: true     # circuit-tracer default; check memory at K0
+revisions: {model: null, transcoders: null}
+n_layers: null
+d_model: null
+d_transcoder: null
+timing:
+  row_seconds: null
+  kappa: null
+  recovery_columns_per_second: null
+  exact_default_wall_seconds: null
+  exact_default_peak_gb: null
