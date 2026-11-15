@@ -22,7 +22,7 @@ Dawar's confirmation of the Gate 0 thresholds (PREREG_GATE0.md, draft), then the
 
 ## PREREG commits
 - Kill test draft: 55d84fc (v1; runs after Gate 0 on the GO-BIG path).
-- Gate 0: draft committed with the Gate 0 code; the confirmed hash is recorded here before the first
+- Gate 0 draft: 60f3720 (thresholds awaiting confirmation); the confirmed hash is recorded here before the first
   real-model run.
 
 ## Next (VM)
