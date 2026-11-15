@@ -1,0 +1,338 @@
+{
+  "verdict": {
+    "verdict": "NO-GO",
+    "partial": false,
+    "missing": [],
+    "conditions": {
+      "k07": {
+        "value": {
+          "tiny_clt/tiny_test_00": 2.460121825823361e-16,
+          "tiny_clt/tiny_test_01": 2.0809536353097313e-16,
+          "tiny_clt/tiny_test_02": 1.9655531894082374e-16,
+          "tiny_plt/tiny_test_00": 2.6213885739019753e-16,
+          "tiny_plt/tiny_test_01": 2.3723630024919885e-16,
+          "tiny_plt/tiny_test_02": 2.2431451606647355e-16,
+          "g0b_trace": 2.4306726905262077e-16
+        },
+        "threshold": {
+          "tiny_clt/tiny_test_00": 0.0001,
+          "tiny_clt/tiny_test_01": 0.0001,
+          "tiny_clt/tiny_test_02": 0.0001,
+          "tiny_plt/tiny_test_00": 0.0001,
+          "tiny_plt/tiny_test_01": 0.0001,
+          "tiny_plt/tiny_test_02": 0.0001,
+          "g0b_trace": 0.0001
+        },
+        "pass": true
+      },
+      "compressible": {
+        "value": {
+          "tiny_clt": "0/3",
+          "tiny_plt": "0/3"
+        },
+        "threshold": "s95_rem_frac_T <= 0.02 on >= 2 prompts for >= 1 set",
+        "pass": false
+      },
+      "not_nogo_s95": {
+        "value": {
+          "tiny_clt": {
+            "tiny_test_00": 0.425,
+            "tiny_test_01": 0.38125,
+            "tiny_test_02": 0.3875
+          },
+          "tiny_plt": {
+            "tiny_test_00": 0.45625,
+            "tiny_test_01": 0.375,
+            "tiny_test_02": 0.40625
+          }
+        },
+        "threshold": "NO-GO if every prompt of every set > 0.1",
+        "pass": false
+      },
+      "beta": {
+        "value": 0.6103656236409316,
+        "threshold": ">= 0.6",
+        "pass": true
+      },
+      "k_eff_ratio": {
+        "value": 7.184615384615385,
+        "threshold": "<= 3.0",
+        "pass": false
+      },
+      "not_nogo_k_eff": {
+        "value": 7.184615384615385,
+        "threshold": "NO-GO if > 10.0",
+        "pass": true
+      },
+      "screening": {
+        "value": 1.0,
+        "threshold": ">= 0.99 at some tau in [0.01, 0.001, 0.0001]",
+        "pass": true
+      },
+      "s_proj": {
+        "value": 10.839359953816503,
+        "threshold": ">= 10.0",
+        "pass": true
+      }
+    },
+    "s_proj": 10.839359953816503,
+    "derived": {
+      "k07_failures": [],
+      "k_eff_short": {
+        "tiny_clt": 62.0,
+        "tiny_plt": 65.0
+      },
+      "plt_set": "tiny_plt",
+      "C": {
+        "C_short": 0.2793093760353596,
+        "C_by_prompt": {
+          "tiny_test_00": 0.2793093760353596,
+          "tiny_test_01": 0.2718787860862043,
+          "tiny_test_02": 1.093061824370081
+        },
+        "flagged_no_m": []
+      },
+      "beta": 0.6103656236409316,
+      "L": 20.0,
+      "c_median": 256.0,
+      "k_eff_ratio": 7.184615384615385,
+      "screening": {
+        "pass": true,
+        "tau": 0.01,
+        "recall": 0.9997466207867494,
+        "omega_frac_T": 0.327272323483384,
+        "best_recall": 1.0
+      },
+      "s_proj_terms": {
+        "c": 256.0,
+        "L": 20.0,
+        "beta": 0.6103656236409316,
+        "C_short": 0.2793093760353596,
+        "k_eff_trace": 467.0,
+        "T_trace": 1275,
+        "kappa": 1.3687851282153258,
+        "H_est": 0.0,
+        "m_prime": 16,
+        "trunc_cost": 1593.470214626122,
+        "sensing_cost": 131.00777734252347,
+        "hub_cost": 0.0,
+        "s_proj": 10.839359953816503
+      },
+      "failed_conditions": [
+        "compressible",
+        "k_eff_ratio"
+      ]
+    }
+  },
+  "inputs": {
+    "g0a": {
+      "tiny_clt": {
+        "tiny_test_00": {
+          "T": 160,
+          "N": 190,
+          "k07_rel_err": 2.460121825823361e-16,
+          "s95_rem_ewm": 68.0,
+          "s95_rem_frac_T": 0.425,
+          "c_trunc": 160,
+          "m_min": 16
+        },
+        "tiny_test_01": {
+          "T": 160,
+          "N": 200,
+          "k07_rel_err": 2.0809536353097313e-16,
+          "s95_rem_ewm": 61.0,
+          "s95_rem_frac_T": 0.38125,
+          "c_trunc": 160,
+          "m_min": 16
+        },
+        "tiny_test_02": {
+          "T": 160,
+          "N": 190,
+          "k07_rel_err": 1.9655531894082374e-16,
+          "s95_rem_ewm": 62.0,
+          "s95_rem_frac_T": 0.3875,
+          "c_trunc": 160,
+          "m_min": 16
+        }
+      },
+      "tiny_plt": {
+        "tiny_test_00": {
+          "T": 160,
+          "N": 190,
+          "k07_rel_err": 2.6213885739019753e-16,
+          "s95_rem_ewm": 73.0,
+          "s95_rem_frac_T": 0.45625,
+          "c_trunc": 160,
+          "m_min": 16
+        },
+        "tiny_test_01": {
+          "T": 160,
+          "N": 200,
+          "k07_rel_err": 2.3723630024919885e-16,
+          "s95_rem_ewm": 60.0,
+          "s95_rem_frac_T": 0.375,
+          "c_trunc": 160,
+          "m_min": 16
+        },
+        "tiny_test_02": {
+          "T": 160,
+          "N": 190,
+          "k07_rel_err": 2.2431451606647355e-16,
+          "s95_rem_ewm": 65.0,
+          "s95_rem_frac_T": 0.40625,
+          "c_trunc": 160,
+          "m_min": 64
+        }
+      }
+    },
+    "union": {
+      "beta": 0.6103656236409316,
+      "c_median": 256.0,
+      "n_outputs_without_c": 0
+    },
+    "columns": {
+      "T": 1275,
+      "N": 1405,
+      "n_sampled": 80,
+      "k_eff_trace": 467.0,
+      "hub_fraction": 0.0,
+      "screen_recall": {
+        "0.01": {
+          "recall": 0.9997466207867494,
+          "recall_remainder": 0.9993429631479339,
+          "omega_frac_T": 0.327272323483384
+        },
+        "0.001": {
+          "recall": 1.0,
+          "recall_remainder": 1.0,
+          "omega_frac_T": 0.3428073046119856
+        },
+        "0.0001": {
+          "recall": 1.0,
+          "recall_remainder": 1.0,
+          "omega_frac_T": 0.3428073046119856
+        }
+      }
+    }
+  },
+  "tiny": true,
+  "run_record": {
+    "config": {
+      "prereg": {
+        "prereg_version": 1,
+        "gate": "gate0",
+        "status": "DRAFT: thresholds proposed in PROJECT_V2.md Section 7, awaiting Dawar's confirmation",
+        "k07": {
+          "fp32_rel_err_at_most": 0.0001,
+          "bf16_rel_err_at_most": 0.02,
+          "on_failure": "stop Gate 0: report the failure, issue no verdict"
+        },
+        "fidelity": {
+          "influence_weighted_node_recall_at_least": 0.95,
+          "node_jaccard_at_least": 0.85,
+          "seeds_required": 2
+        },
+        "pruning": {
+          "node_threshold": 0.8,
+          "edge_threshold": 0.98
+        },
+        "g0a": {
+          "model": "gemma2_2b",
+          "transcoder_sets": [
+            "gemma2_2b_plt",
+            "gemma2_2b_clt426k"
+          ],
+          "plt_set_suffix": "plt",
+          "prompt_ids": [
+            "kill_test_00",
+            "kill_test_04",
+            "kill_test_09"
+          ],
+          "regime": "D",
+          "sensing_m": [
+            128,
+            256,
+            512,
+            1024
+          ],
+          "sensing_seeds": [
+            0,
+            1,
+            2
+          ],
+          "compressible": {
+            "s95_rem_frac_T_at_most": 0.02,
+            "prompts_required_at_least": 2,
+            "sets_required_at_least": 1
+          }
+        },
+        "g0b": {
+          "model_set": "qwen3_1p7b_plt",
+          "n_traces": 2,
+          "union_levels": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            32
+          ],
+          "reference_budget": 8192,
+          "convergence_budget": 4096,
+          "convergence_jaccard_at_least": 0.95,
+          "raised_budget": 16384,
+          "beta_at_least": 0.6,
+          "n_sampled_columns": 300,
+          "k_eff_trace_over_k_eff_short_plt_at_most": 3.0,
+          "hub_s95_over_k_eff_trace_above": 10.0,
+          "screening": {
+            "taus": [
+              0.01,
+              0.001,
+              0.0001
+            ],
+            "energy_recall_at_least": 0.99
+          }
+        },
+        "s_proj": {
+          "m_prime": 16,
+          "at_least": 10.0,
+          "m_min_fallback": 1024
+        },
+        "verdicts": {
+          "nogo": {
+            "s95_rem_frac_T_above": 0.1,
+            "k_eff_trace_over_k_eff_short_plt_above": 10.0
+          },
+          "go_big": "compressible AND beta AND k_eff_ratio AND screening AND s_proj, on complete data only",
+          "go_structure": "not NO-GO, compressible holds, and the GO-BIG condition fails only through beta or s_proj",
+          "nogo_rule": "s95_rem_frac_T above 0.10 on every prompt of both sets, OR k_eff ratio above 10",
+          "undecided": "any other combination; the failed conditions are listed for Dawar",
+          "partial": "a G0-B part did not run: verdict on what exists, labelled PARTIAL, never GO-BIG",
+          "k07_failure": "STOPPED: no verdict"
+        }
+      },
+      "results_dir": "C:\\Users\\dawar\\Downloads\\CPAL_3\\results\\tiny\\gate0"
+    },
+    "seed": null,
+    "git": {
+      "hash": "7ecc83534940a9584abc8d56b440c36e96076fa4",
+      "dirty": true
+    },
+    "packages": {
+      "python": "3.12.1",
+      "torch": "2.15.0+cpu",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "circuit_tracer": null,
+      "transformer_lens": null,
+      "nnsight": null,
+      "transformers": null,
+      "huggingface_hub": null,
+      "yaml": "6.0.3"
+    },
+    "gpu": "cpu (AMD64)",
+    "wall_seconds": 0.15188439999474213,
+    "utc": "2026-11-15T10:41:31+00:00"
+  }
+}

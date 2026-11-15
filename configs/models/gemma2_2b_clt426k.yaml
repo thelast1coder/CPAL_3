@@ -4,8 +4,8 @@ model_name: google/gemma-2-2b
 transcoder_set: mntss/clt-gemma-2-2b-426k   # (verify) repository exists and loads with circuit-tracer 0.5.0
 transcoder_type: clt
 backend: transformerlens
-dtype: null            # D10, decided at K0
-memory_cap_gb: 30
+dtype: float32         # D10 for Gate 0: float32 (exclusive 96 GB GPU); bfloat16 only if it does not fit
+memory_cap_gb: 85      # exclusive RTX PRO 6000; the queue lowers it per lane (CCT_MEMORY_CAP_GB)
 lazy_decoder: true     # circuit-tracer default; check memory at K0
 revisions: {model: null, transcoders: null}
 n_layers: null

@@ -49,10 +49,15 @@ class CircuitTracerOperator(OperatorMixin):
     def __init__(self, model, prompt, *, max_n_logits: int = 10, desired_logit_prob: float = 0.95,
                  batch_size: int = 256, target_features: Tensor | None = None,
                  source_features: Tensor | None = None,
-                 forward_mode: Literal["fwad", "double_backward"] = "fwad"):
+                 forward_mode: Literal["fwad", "double_backward"] = "fwad",
+                 detach_attention: bool = False):
+        """detach_attention=True stop-gradients every attention output (hook_attn_out) in the cached
+        forward and in forward-mode passes: the forward values are unchanged and only the attention-free
+        paths remain, so rows and columns are those of the local part A_0 (K0.7)."""
         from circuit_tracer.attribution.targets import AttributionTargets  # VM only
 
         self.model = model
+        self.detach_attention = detach_attention
         self.batch_size = batch_size
         self.forward_mode = forward_mode
         self.counters = CostCounters()
@@ -61,7 +66,8 @@ class CircuitTracerOperator(OperatorMixin):
         t0 = time.perf_counter()
         self.tokens = model.ensure_tokenized(prompt)
         ctx = model.setup_attribution(self.tokens)
-        model.run_forward_pass(self.tokens, batch_size, ctx)
+        with model.hooks(fwd_hooks=self._extra_fwd_hooks()):
+            model.run_forward_pass(self.tokens, batch_size, ctx)
         self.ctx = ctx
         self.n_layers, self.n_pos, _ = ctx.activation_matrix.shape
         L, n = self.n_layers, self.n_pos
@@ -79,6 +85,15 @@ class CircuitTracerOperator(OperatorMixin):
         self.setup_seconds = time.perf_counter() - t0
         self.set_targets(target_features)
         self.set_sources(source_features)
+
+    def _extra_fwd_hooks(self) -> list:
+        if not self.detach_attention:
+            return []
+
+        def detach(acts, hook):
+            return acts.detach()
+
+        return [(f"blocks.{l}.hook_attn_out", detach) for l in range(self.model.cfg.n_layers)]
 
     # -- node sets -----------------------------------------------------------------------------
     def set_targets(self, target_features: Tensor | None) -> None:
@@ -248,7 +263,7 @@ class CircuitTracerOperator(OperatorMixin):
         fwd = [(f"blocks.{l}.{m.feature_output_hook}", partial(out_hook, l=l)) for l in range(L)]
         fwd += [(f"blocks.{l}.{m.feature_input_hook}", partial(in_hook, l=l)) for l in range(L)]
         fwd.append(("hook_embed", emb_hook))
-        with m.hooks(fwd_hooks=fwd):
+        with m.hooks(fwd_hooks=fwd + self._extra_fwd_hooks()):
             resid = m.forward(self.tokens.expand(b, -1), stop_at_layer=L)
         store[L] = m.ln_final(resid)
 
@@ -344,3 +359,98 @@ class CircuitTracerOperator(OperatorMixin):
             "selected_features": torch.where(visited)[0],
             "seconds": time.perf_counter() - t0,
         }
+
+    # -- local part A_0 (PROJECT_V2 T2) and attention rollout -------------------------------------
+    @torch.no_grad()
+    def read_diagonals(self, rtol: float | None = None) -> Tensor:
+        """D [L + 1, n_pos, d]: the frozen residual-to-read map at each (layer, position), which is
+        diagonal. Detected from a cached forward pass by checking which candidate reproduces the
+        feature-input hook from hook_resid_mid: identity (CLT reading hook_resid_mid), 1 / scale
+        (ln2.hook_normalized, or a folded RMSNormPre) or w / scale (the ln2 output, e.g. mlp.hook_in).
+        Row L is ln_final (its output is the logit read point in circuit-tracer). Raises if no
+        candidate matches."""
+        m = self.model
+        L = self.n_layers
+        rtol = rtol or (1e-3 if self.dtype == torch.float32 else 3e-2)
+        cache: dict = {}
+
+        def keep(acts, hook):
+            cache[hook.name] = acts.detach()[0].float()
+            return acts
+
+        names = [f"blocks.{l}.hook_resid_mid" for l in range(L)] +                 [f"blocks.{l}.ln2.hook_scale" for l in range(L)] +                 [f"blocks.{l}.{m.feature_input_hook}" for l in range(L)] + ["ln_final.hook_scale"]
+        with m.hooks(fwd_hooks=[(nm, keep) for nm in names]):
+            resid = m.forward(self.tokens[None], stop_at_layer=L)
+        final = m.ln_final(resid)[0].float()
+        resid = resid[0].float()
+        n, d = resid.shape
+        D = torch.empty(L + 1, n, d, device=self.device, dtype=torch.float32)
+        self.read_map_kind = []
+        for l in range(L):
+            x = cache[f"blocks.{l}.hook_resid_mid"]
+            y = cache[f"blocks.{l}.{m.feature_input_hook}"]
+            sc = cache[f"blocks.{l}.ln2.hook_scale"]
+            w = getattr(m.blocks[l].ln2, "w", None)
+            cands = {"identity": torch.ones_like(x), "inv_scale": (1.0 / sc).expand_as(x)}
+            if w is not None:
+                cands["w_over_scale"] = w.float()[None, :] / sc
+            D[l], kind = self._pick(x, y, cands, rtol, f"layer {l}")
+            self.read_map_kind.append(kind)
+        scf = cache["ln_final.hook_scale"]
+        wf = getattr(m.ln_final, "w", None)
+        cands = {"inv_scale": (1.0 / scf).expand_as(resid)}
+        if wf is not None:
+            cands["w_over_scale"] = wf.float()[None, :] / scf
+        D[L], kind = self._pick(resid, final, cands, rtol, "ln_final")
+        self.read_map_kind.append(kind)
+        return D
+
+    @staticmethod
+    def _pick(x: Tensor, y: Tensor, cands: dict, rtol: float, where: str) -> tuple[Tensor, str]:
+        errs = {}
+        for k, Dk in cands.items():
+            e = float((x * Dk - y).norm() / y.norm().clamp_min(1e-30))
+            errs[k] = e
+            if e <= rtol:
+                return Dk, k
+        raise RuntimeError(f"read map at {where} matches no candidate (relative errors {errs})")
+
+    def skip_vjp(self):
+        """(layer, V [k, d]) -> S_layer^T V for the transcoders' linear skip connection."""
+        tr = self.model.transcoders
+
+        def f(l: int, V: Tensor) -> Tensor:
+            with torch.enable_grad():
+                x = torch.zeros(V.shape, device=V.device, dtype=self.dtype, requires_grad=True)
+                y = tr.compute_skip(l, x)
+                (g,) = torch.autograd.grad(y, x, V.to(y.dtype))
+            return g.to(V.dtype)
+
+        return f
+
+    @torch.no_grad()
+    def attention_patterns(self) -> Tensor:
+        """[L, H, n, n] attention patterns of the prompt (query x key)."""
+        m = self.model
+        pats: dict = {}
+
+        def keep(acts, hook):
+            pats[hook.name] = acts.detach()[0].float()
+            return acts
+
+        names = [f"blocks.{l}.attn.hook_pattern" for l in range(self.n_layers)]
+        with m.hooks(fwd_hooks=[(nm, keep) for nm in names]):
+            m.forward(self.tokens[None], stop_at_layer=self.n_layers)
+        return torch.stack([pats[nm] for nm in names])
+
+    def ov_weights(self) -> tuple[Tensor, Tensor]:
+        """W_V [L, H, d, dh] and W_O [L, H, dh, d], key/value heads repeated for grouped-query
+        attention so that heads match the patterns."""
+        Wv, Wo = [], []
+        for blk in self.model.blocks:
+            v, o = blk.attn.W_V.detach().float(), blk.attn.W_O.detach().float()
+            if v.shape[0] != o.shape[0]:
+                v = v.repeat_interleave(o.shape[0] // v.shape[0], dim=0)
+            Wv.append(v)
+            Wo.append(o)
+        return torch.stack(Wv), torch.stack(Wo)

@@ -1,0 +1,411 @@
+{
+  "T": 160,
+  "N": 200,
+  "a0_energy_share": 0.6461489077927618,
+  "s95_A_ewm": 40.0,
+  "s95_rem_ewm": 60.0,
+  "s95_A_frac_T": 0.25,
+  "s95_rem_frac_T": 0.375,
+  "row_s95_rem_ewm": 6.0,
+  "hub_share_by_kind": {
+    "feature": 0.03650932284786199,
+    "error": 0.09607008526992065,
+    "token": 0.8673605174760427
+  },
+  "hub_count_rem": 168,
+  "s95_rem_ewm_by_kind": {
+    "feature": 29.0,
+    "error": 32.0,
+    "token": 60.0
+  },
+  "k07_rel_err": 2.3723630024919885e-16,
+  "dtype": "float64",
+  "fwd_rel_err": 2.3626214541377493e-08,
+  "forward_mode": "fwad",
+  "c_trunc": 160,
+  "truncation_curve": {
+    "8": {
+      "cost": 8.0,
+      "meets": false,
+      "iw_recall": 0.0,
+      "jaccard": 0.0
+    },
+    "16": {
+      "cost": 16.0,
+      "meets": false,
+      "iw_recall": 0.14825724746619806,
+      "jaccard": 0.09090909090909091
+    },
+    "32": {
+      "cost": 32.0,
+      "meets": false,
+      "iw_recall": 0.3421959823298158,
+      "jaccard": 0.22727272727272727
+    },
+    "64": {
+      "cost": 64.0,
+      "meets": false,
+      "iw_recall": 0.6064822320016824,
+      "jaccard": 0.4772727272727273
+    },
+    "128": {
+      "cost": 128.0,
+      "meets": false,
+      "iw_recall": 0.9140969370085967,
+      "jaccard": 0.8636363636363636
+    },
+    "T_D": {
+      "cost": 160.0,
+      "meets": true,
+      "iw_recall": 1.0,
+      "jaccard": 1.0
+    }
+  },
+  "m_min": 16,
+  "fidelity_by_m": {
+    "16": {
+      "n_meet": 3,
+      "meets": true,
+      "median_cost": 300.3680044948337
+    },
+    "32": {
+      "n_meet": 3,
+      "meets": true,
+      "median_cost": 328.103288265904
+    },
+    "64": {
+      "n_meet": 3,
+      "meets": true,
+      "median_cost": 408.4880855732047
+    },
+    "128": {
+      "n_meet": 3,
+      "meets": true,
+      "median_cost": 544.1555329040445
+    }
+  },
+  "sensing_runs": {
+    "16": [
+      {
+        "seed": 0,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 300.3680044948337,
+        "recovery_seconds": 0.07716050004819408,
+        "n_hubs": 101
+      },
+      {
+        "seed": 1,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 277.98740929866216,
+        "recovery_seconds": 0.03466810000827536,
+        "n_hubs": 96
+      },
+      {
+        "seed": 2,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 318.920825250024,
+        "recovery_seconds": 0.1005142999929376,
+        "n_hubs": 96
+      }
+    ],
+    "32": [
+      {
+        "seed": 0,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 328.103288265904,
+        "recovery_seconds": 0.17144349997397512,
+        "n_hubs": 95
+      },
+      {
+        "seed": 1,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 331.79073607151844,
+        "recovery_seconds": 0.18721720000030473,
+        "n_hubs": 93
+      },
+      {
+        "seed": 2,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 318.0739963975826,
+        "recovery_seconds": 0.13285629998426884,
+        "n_hubs": 95
+      }
+    ],
+    "64": [
+      {
+        "seed": 0,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 440.71950996106506,
+        "recovery_seconds": 0.39222999999765307,
+        "n_hubs": 96
+      },
+      {
+        "seed": 1,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 380.3752672276752,
+        "recovery_seconds": 0.22485340002458543,
+        "n_hubs": 94
+      },
+      {
+        "seed": 2,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 408.4880855732047,
+        "recovery_seconds": 0.28977600001962855,
+        "n_hubs": 96
+      }
+    ],
+    "128": [
+      {
+        "seed": 0,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 585.4936184048597,
+        "recovery_seconds": 0.5359816999989562,
+        "n_hubs": 96
+      },
+      {
+        "seed": 1,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 544.1555329040445,
+        "recovery_seconds": 0.5388427000143565,
+        "n_hubs": 94
+      },
+      {
+        "seed": 2,
+        "meets": true,
+        "iw_recall": 0.9861510181481862,
+        "jaccard": 0.9772727272727273,
+        "cost": 531.452690675387,
+        "recovery_seconds": 0.4744696999550797,
+        "n_hubs": 96
+      }
+    ]
+  },
+  "recovery_seconds_by_m": {
+    "16": 0.07716050004819408,
+    "32": 0.17144349997397512,
+    "64": 0.28977600001962855,
+    "128": 0.5359816999989562
+  },
+  "prompt": null,
+  "gpu_seconds": 2.4917767999577336,
+  "run": {
+    "config": {
+      "seed": 0,
+      "g0a": {
+        "model_sets": [
+          "gemma2_2b_plt",
+          "gemma2_2b_clt426k"
+        ],
+        "prompts_file": "configs/prompts/kill_test.json",
+        "prompt_ids": [
+          "kill_test_00",
+          "kill_test_04",
+          "kill_test_09"
+        ],
+        "exact": {
+          "max_feature_nodes": 7500,
+          "batch_size": 256,
+          "max_n_logits": 10,
+          "desired_logit_prob": 0.95,
+          "update_interval": 4,
+          "node_threshold": 0.8,
+          "edge_threshold": 0.98
+        },
+        "k07_rows": 256,
+        "truncation_budgets": [
+          16,
+          32,
+          64,
+          96,
+          128,
+          192,
+          256,
+          384,
+          512,
+          768,
+          1024,
+          1536,
+          2048,
+          3072,
+          4096,
+          6144,
+          "T_D"
+        ],
+        "sensing_m": [
+          128,
+          256,
+          512,
+          1024
+        ],
+        "sensing_seeds": [
+          0,
+          1,
+          2
+        ],
+        "cct": {
+          "sensing": "rademacher",
+          "exact_logit_rows": true,
+          "mask": true,
+          "screening": {
+            "enabled": true,
+            "q": 0.995,
+            "safety": 2.0
+          },
+          "recovery": {
+            "algo": "omp",
+            "k_max": 32,
+            "device": "cuda",
+            "dtype": "float32",
+            "chunk": 1024,
+            "tol": 1e-06
+          },
+          "hubs": {
+            "enabled": true,
+            "rho_hub": 0.3,
+            "budget": 128
+          },
+          "certify": {
+            "enabled": false
+          },
+          "refine": {
+            "enabled": false
+          }
+        },
+        "timing_repeats": 3
+      },
+      "g0b": {
+        "model_set": "qwen3_1p7b_plt",
+        "problems_file": "configs/prompts/gate0_traces.json",
+        "traces_file": "results/gate0/traces.json",
+        "generation": {
+          "enable_thinking": true,
+          "do_sample": false,
+          "max_new_tokens": 512,
+          "dtype": "float32"
+        },
+        "n_traces": 2,
+        "generated_tokens_range": [
+          200,
+          300
+        ],
+        "fallback_generated_tokens_range": [
+          150,
+          400
+        ],
+        "union": {
+          "slots": 32,
+          "levels": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            32
+          ],
+          "reference_budget": 8192,
+          "convergence_budget": 4096,
+          "convergence_jaccard": 0.95,
+          "raised_budget": 16384,
+          "batch_size": 64,
+          "max_n_logits": 10,
+          "desired_logit_prob": 0.95,
+          "update_interval": 4,
+          "node_threshold": 0.8,
+          "edge_threshold": 0.98,
+          "c_grid": [
+            16,
+            32,
+            64,
+            96,
+            128,
+            192,
+            256,
+            384,
+            512,
+            768,
+            1024,
+            1536,
+            2048,
+            3072,
+            4096,
+            6144,
+            8192,
+            12288,
+            16384
+          ],
+          "time_budget_minutes": 60
+        },
+        "columns": {
+          "n_sources": 300,
+          "strata_kinds": [
+            "feature",
+            "error",
+            "token"
+          ],
+          "strata_positions": [
+            "first",
+            "early",
+            "middle",
+            "late"
+          ],
+          "batch": 32,
+          "forward_batch_size": 32,
+          "taus": [
+            0.01,
+            0.001,
+            0.0001
+          ],
+          "k07_rows": 64
+        }
+      },
+      "tiny_exact": {
+        "max_feature_nodes": 150,
+        "batch_size": 64
+      }
+    },
+    "seed": 0,
+    "git": {
+      "hash": "7ecc83534940a9584abc8d56b440c36e96076fa4",
+      "dirty": true
+    },
+    "packages": {
+      "python": "3.12.1",
+      "torch": "2.15.0+cpu",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "circuit_tracer": null,
+      "transformer_lens": null,
+      "nnsight": null,
+      "transformers": null,
+      "huggingface_hub": null,
+      "yaml": "6.0.3"
+    },
+    "gpu": "cpu (AMD64)",
+    "wall_seconds": 7.214649699977599,
+    "utc": "2026-11-15T10:40:27+00:00",
+    "set_name": "tiny_plt",
+    "prompt_id": "tiny_test_01"
+  }
+}

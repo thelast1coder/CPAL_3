@@ -1,0 +1,18 @@
+# Qwen3-1.7B (thinking) with circuit-tracer's Qwen-3 PLTs. Repository from the circuit-tracer README
+# ("Qwen-3 PLTs", checked 15 Nov 2026); config.yaml there: model_name Qwen/Qwen3-1.7B,
+# feature_input_hook mlp.hook_in, feature_output_hook mlp.hook_out. Revisions are filled from the
+# download (download_models.py), never from memory.
+name: qwen3_1p7b_plt
+model_name: Qwen/Qwen3-1.7B
+transcoder_set: mwhanna/qwen3-1.7b-transcoders-lowl0
+transcoder_type: plt
+backend: transformerlens   # TransformerLens 2.18 lists Qwen/Qwen3-1.7B (checked in its source)
+dtype: float32
+memory_cap_gb: 85          # exclusive RTX PRO 6000 (96 GB); lower it if the GPU is shared
+revisions: {model: null, transcoders: null}
+n_layers: null
+d_model: null
+d_transcoder: null
+timing:
+  row_seconds: null
+  kappa: null

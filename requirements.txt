@@ -1,9 +1,13 @@
-# VM (H100). Install torch with the CUDA build first (see scripts/vm_setup.sh).
-# circuit-tracer pinned (docs/decisions.md, D-impl-1). Its backend dependencies
-# (transformer-lens, nnsight, transformers, einops, safetensors) are resolved by pip on the VM;
+# VM (RTX PRO 6000 Blackwell, or H100). Install torch with the CUDA build first (scripts/vm_setup.sh).
+# circuit-tracer pinned (docs/decisions.md, I2). transformer-lens is pinned because its 4.x line needs
+# transformers >= 5.9, which conflicts with circuit-tracer 0.5.0 (transformers >= 4.56, <= 4.57.3);
+# 2.18.0 needs transformers >= 4.57 and lists Qwen3 0.6B, 1.7B and 4B (checked in its source, 15 Nov).
 # vm_setup.sh writes the resolved versions to results/vm_pip_freeze.txt.
 circuit-tracer==0.5.0
-huggingface_hub
+transformer-lens==2.18.0
+transformers==4.57.3
+huggingface_hub<1.0.0
+accelerate
 numpy
 scipy
 pandas

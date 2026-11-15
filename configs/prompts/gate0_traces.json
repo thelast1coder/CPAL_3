@@ -1,0 +1,14 @@
+[
+  {"id": "g0_trace_00", "category": "arithmetic", "question": "A baker fills 4 trays with 9 muffins each and then sells 23 muffins. How many muffins are left? Give the final answer as a single number.", "answer": "13"},
+  {"id": "g0_trace_01", "category": "arithmetic", "question": "Tom has 3 boxes of pencils with 12 pencils in each box. He gives 7 pencils to his sister and then buys 5 more. How many pencils does he have now? Give the final answer as a single number.", "answer": "34"},
+  {"id": "g0_trace_02", "category": "arithmetic", "question": "Pens cost 3 pounds each. Mia buys 6 pens and pays with a 50 pound note. How much change does she get, in pounds? Give the final answer as a single number.", "answer": "32"},
+  {"id": "g0_trace_03", "category": "arithmetic", "question": "A garden has 5 rows of 8 tulips and 3 rows of 6 roses. How many flowers are in the garden? Give the final answer as a single number.", "answer": "58"},
+  {"id": "g0_trace_04", "category": "arithmetic", "question": "Sam reads 14 pages a day for 6 days and then 10 pages on the seventh day. How many pages does he read in total? Give the final answer as a single number.", "answer": "94"},
+  {"id": "g0_trace_05", "category": "arithmetic", "question": "A bus carries 47 passengers. At the first stop 15 get off and 9 get on. At the second stop 12 get off. How many passengers are on the bus now? Give the final answer as a single number.", "answer": "29"},
+  {"id": "g0_trace_06", "category": "multi_hop", "question": "Which ocean lies to the west of the country whose capital is Lisbon? Answer with one word.", "answer": "Atlantic"},
+  {"id": "g0_trace_07", "category": "multi_hop", "question": "What is the capital city of the country in which Kyoto is located? Answer with one word.", "answer": "Tokyo"},
+  {"id": "g0_trace_08", "category": "multi_hop", "question": "What is the main language of the country whose capital is Brasilia? Answer with one word.", "answer": "Portuguese"},
+  {"id": "g0_trace_09", "category": "multi_hop", "question": "On which continent is the country whose capital is Nairobi? Answer with one word.", "answer": "Africa"},
+  {"id": "g0_trace_10", "category": "multi_hop", "question": "Which river flows through the capital city of the United Kingdom? Answer with one word.", "answer": "Thames"},
+  {"id": "g0_trace_11", "category": "multi_hop", "question": "Which mountain range lies along the border between France and the country whose capital is Madrid? Answer with one word.", "answer": "Pyrenees"}
+]

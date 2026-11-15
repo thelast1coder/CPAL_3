@@ -20,32 +20,27 @@ python -m venv .venv
 .venv/Scripts/python -m pip install torch --index-url https://download.pytorch.org/whl/cpu   # Windows path
 .venv/Scripts/python -m pip install numpy scipy pyyaml pytest
 .venv/Scripts/python -m pip install -e . --no-deps
-.venv/Scripts/python -m pytest -q                      # 31 tests, including the tiny end-to-end run
+.venv/Scripts/python -m pytest -q                      # all CPU tests, including the tiny end-to-end runs
 bash scripts/run_kill_test.sh --tiny                   # writes results/tiny/KILL_REPORT.md (TINY)
 ```
 
-## VM (H100, shared): first commands for P1
+## VM (RTX PRO 6000 96 GB, or H100): Gate 0, the first GPU job (PROJECT_V2 Section 7)
+Rent with a CUDA 12.8 (or newer) PyTorch image, at least 150 GB disk and 64 GB or more of system RAM.
 ```bash
-git clone <private repo URL> CCT_CPAL && cd CCT_CPAL
-export HF_HOME=/path/on/vm/big_disk/hf          # all downloads go here
-df -h "$HF_HOME"                                 # about 150 GB free needed
-nvidia-smi                                       # see what Mirror_CPAL, MoE_CPAL and the CVPR job use
-bash scripts/vm_setup.sh                         # venv, CUDA torch, requirements, versions, pytest -q
+git clone https://github.com/thelast1coder/CPAL_3.git CCT_CPAL && cd CCT_CPAL
+export HF_HOME=/path/on/big_disk/hf        # all downloads go here
+bash scripts/vm_setup.sh                    # venv, torch cu128, pinned requirements, GPU check, pytest
 source .venv/bin/activate
-hf auth login                                    # fresh token (verify command); Gemma licence accepted
-python scripts/download_models.py --set gemma2_2b_plt --dry-run      # sizes and revisions; settles Q2
-python scripts/download_models.py --set gemma2_2b_plt
-python scripts/download_models.py --set gemma2_2b_clt426k --dry-run
-python scripts/download_models.py --set gemma2_2b_clt426k
-# D10: set dtype (float32 or bfloat16) and memory_cap_gb in configs/models/*.yaml, record in STATUS.md
-python scripts/sanity_k0.py --transcoders both   # K0: stop here and report if anything fails
+hf auth login                               # fresh read-only token; accept the Gemma-2 licence first
+for s in qwen3_1p7b_plt gemma2_2b_plt gemma2_2b_clt426k; do python scripts/download_models.py --set $s --dry-run; done
+tmux new -s gate0                           # survives a dropped SSH connection
+bash scripts/run_gate0.sh                   # downloads, 3 lanes in parallel, report; resumable
 ```
-After K0 passes and is reported:
-```bash
-bash scripts/run_kill_test.sh --transcoders both   # exact graphs, K1, K2, K3, report (resumable)
-```
-Each step can also be run on its own (same flags). Every script supports `--config`, `--seed`,
-`--tiny`, `--force` (otherwise finished outputs are skipped) and `--transcoders plt|clt|both`.
+Then read `results/gate0/GATE0_REPORT.md` and stop: Dawar decides GO-BIG, GO-STRUCTURE or NO-GO.
+Rehearsal on the laptop (minutes, numbers meaningless): `PY=.venv/Scripts/python bash scripts/run_gate0.sh --tiny`.
+
+The v1 kill test (`scripts/run_kill_test.sh`, K0 to K3) runs after Gate 0 on the GO-BIG path.
+Every script supports `--config`, `--seed`, `--tiny`, `--force` and `--transcoders plt|clt|both`.
 Logs go to `logs/`, large artefacts to `artifacts/` (both gitignored).
 
 ## Rules that the code enforces

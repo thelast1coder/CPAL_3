@@ -58,7 +58,12 @@ def results_dir(args) -> str:
 
 
 def model_config(set_name: str) -> dict:
-    return load_yaml(os.path.join(ROOT, "configs", "models", f"{set_name}.yaml"))
+    """Model config; CCT_MEMORY_CAP_GB in the environment overrides memory_cap_gb (used by the job queue
+    to split one GPU between lanes)."""
+    mc = load_yaml(os.path.join(ROOT, "configs", "models", f"{set_name}.yaml"))
+    if os.environ.get("CCT_MEMORY_CAP_GB"):
+        mc["memory_cap_gb"] = float(os.environ["CCT_MEMORY_CAP_GB"])
+    return mc
 
 
 # -- tiny ------------------------------------------------------------------------------------------

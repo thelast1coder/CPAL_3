@@ -42,6 +42,7 @@ class TinyConfig:
     active_fraction: float = 0.2
     eps: float = 1e-6
     seed: int = 0
+    skip: bool = False  # linear skip connection from the transcoder input to the MLP output
 
 
 def _rms(x: Tensor, eps: float) -> Tensor:
@@ -84,6 +85,8 @@ class TinyModel:
         else:
             raise ValueError(cfg.transcoder)
         self.threshold = torch.zeros(L, F, dtype=dtype)
+        # skip transcoder: skip(x) = x @ W_skip[l], live in the frozen model (as circuit-tracer)
+        self.W_skip = rnd(L, d, d, scale=0.5 * d ** -0.5) if cfg.skip else None
         self._calibrate(g)
 
     # -- forward pieces ------------------------------------------------------------------------
@@ -161,10 +164,15 @@ class TinyModel:
         cache["logits"] = f @ self.W_U
         return cache
 
-    def frozen_forward(self, tokens: Tensor, delta_emb: Tensor, delta: Tensor) -> tuple[Tensor, Tensor]:
+    def skip_out(self, l: int, x: Tensor) -> Tensor:
+        return x @ self.W_skip[l] if self.W_skip is not None else torch.zeros_like(x)
+
+    def frozen_forward(self, tokens: Tensor, delta_emb: Tensor, delta: Tensor,
+                       detach_attn: bool = False) -> tuple[Tensor, Tensor]:
         """The local replacement model as a hooked forward: stop-gradients (detach) on attention
         patterns, normalisation scales and MLP outputs. delta_emb [b, n, d] is added to the token
         embeddings and delta [b, L, n, d] to each layer's MLP output (the write locations).
+        detach_attn stop-gradients every attention output (the attention-free part A_0, K0.7).
         Returns (feature inputs [b, L, n, d], final normalised residual [b, n, d])."""
         cfg = self.cfg
         b = delta.shape[0]
@@ -180,11 +188,16 @@ class TinyModel:
             s = s.masked_fill(~torch.ones(n, n, dtype=torch.bool).tril(), float("-inf"))
             pattern = torch.softmax(s, -1).detach()
             a, _ = self._attn(l, h, pattern)
-            r = r + a
+            r = r + (a.detach() if detach_attn else a)
             s2 = _rms(r, cfg.eps).detach()
             u = r / s2 * self.g2[l]
-            feats.append(self.feature_input(l, r, s2))
-            m = self._mlp(l, u).detach()  # MLP output frozen (no skip connection)
+            fi = self.feature_input(l, r, s2)
+            feats.append(fi)
+            if self.W_skip is None:
+                m = self._mlp(l, u).detach()  # MLP output frozen (no skip connection)
+            else:
+                sk = self.skip_out(l, fi)
+                m = sk + (self._mlp(l, u) - sk).detach()
             r = r + m + delta[:, l]
         sf = _rms(r, cfg.eps).detach()
         return torch.stack(feats, 1), r / sf * self.gf
@@ -196,8 +209,9 @@ class TinyOperator(OperatorMixin):
     def __init__(self, model: TinyModel, tokens: Tensor, max_n_logits: int = 10,
                  desired_logit_prob: float = 0.95, target_features: Tensor | None = None,
                  source_features: Tensor | None = None, batch_size: int = 256,
-                 dtype: torch.dtype = torch.float64):
+                 dtype: torch.dtype = torch.float64, detach_attn: bool = False):
         self.model = model
+        self.detach_attn = detach_attn
         self.cfg = cfg = model.cfg
         self.tokens = tokens.long().flatten()
         self.n_pos = n = self.tokens.numel()
@@ -224,7 +238,7 @@ class TinyOperator(OperatorMixin):
         # -- reconstruction and error vectors --------------------------------------------------
         acts_b = [a[None] for a in acts]
         errors = torch.stack([cache["mlp_out"][l][0] - model.decoder_out(acts_b, l)[0]
-                              for l in range(L)])  # [L, n, d]
+                              - model.skip_out(l, cache["feat_in"][l][0]) for l in range(L)])  # [L, n, d]
         errors[:, 0] = 0
         self.errors = errors
         # -- logit targets (circuit-tracer AttributionTargets._from_salient) --------------------
@@ -322,7 +336,7 @@ class TinyOperator(OperatorMixin):
         delta_emb = torch.zeros(b, n, d, dtype=self.model.dtype, requires_grad=True)
         delta = torch.zeros(b, L, n, d, dtype=self.model.dtype, requires_grad=True)
         with torch.enable_grad():
-            feats, fin = self.model.frozen_forward(self.tokens, delta_emb, delta)
+            feats, fin = self.model.frozen_forward(self.tokens, delta_emb, delta, self.detach_attn)
             G_in, G_fin = self._seed_to_grad_outputs(seeds)
             g_emb, g_mlp = torch.autograd.grad([feats, fin], [delta_emb, delta], [G_in, G_fin],
                                                allow_unused=True)
@@ -351,7 +365,7 @@ class TinyOperator(OperatorMixin):
         with fwAD.dual_level():
             d_emb = fwAD.make_dual(torch.zeros(b, n, d, dtype=self.model.dtype), t_emb)
             d_mlp = fwAD.make_dual(torch.zeros(b, L, n, d, dtype=self.model.dtype), t_mlp)
-            feats, fin = self.model.frozen_forward(self.tokens, d_emb, d_mlp)
+            feats, fin = self.model.frozen_forward(self.tokens, d_emb, d_mlp, self.detach_attn)
             tf = fwAD.unpack_dual(feats).tangent
             tfin = fwAD.unpack_dual(fin).tangent
         out = torch.zeros(b, self.T, dtype=self.model.dtype)
@@ -473,7 +487,7 @@ class TinyOperator(OperatorMixin):
             err = self.errors[l][None]
             if error_scale is not None:
                 err = err * error_scale[l * n : (l + 1) * n, None]
-            r = r + m.decoder_out(acts_out, l) + err
+            r = r + m.decoder_out(acts_out, l) + m.skip_out(l, x) + err
         sf = _rms(r, cfg.eps)
         sf = sf.detach() if frozen else sf
         f = r / sf * m.gf

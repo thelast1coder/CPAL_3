@@ -9,12 +9,6 @@
       "share_go": 0.0,
       "share_nogo": 0.875,
       "n_prompts": 8
-    },
-    "tiny_clt": {
-      "verdict": "NO-GO",
-      "share_go": 0.0,
-      "share_nogo": 1.0,
-      "n_prompts": 8
     }
   },
   "k2": {
@@ -23,26 +17,14 @@
       "reason": "CCT never reaches the 75% fidelity rate on its grid",
       "s_exact": null,
       "s_b1": null
-    },
-    "tiny_clt": {
-      "verdict": "NO-GO",
-      "s_exact": 0.4961506109441215,
-      "s_b1": 0.4961506109441215
     }
   },
   "k3": {
     "tiny_plt": {
       "verdict": "NO-GO",
       "n_meet": 0,
-      "speedup": 1.1931056198125292,
+      "speedup": 1.4172230894901188,
       "rel_frob": 2.6584426636083778e-08,
-      "rel_frob_tol": 0.01
-    },
-    "tiny_clt": {
-      "verdict": "NO-GO",
-      "n_meet": 4,
-      "speedup": 1.4097793681378987,
-      "rel_frob": 2.6712667506726008e-08,
       "rel_frob_tol": 0.01
     }
   },
@@ -140,7 +122,7 @@
     },
     "seed": null,
     "git": {
-      "hash": "HEAD",
+      "hash": "7ecc83534940a9584abc8d56b440c36e96076fa4",
       "dirty": true
     },
     "packages": {
@@ -157,6 +139,6 @@
     },
     "gpu": "cpu (AMD64)",
     "wall_seconds": null,
-    "utc": "2026-11-10T18:58:07+00:00"
+    "utc": "2026-11-15T10:48:21+00:00"
   }
 }

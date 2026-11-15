@@ -1,24 +1,24 @@
 # CLAUDE.md (CCT_CPAL: Compressed Circuit Tracing)
 
 Read these before doing anything, in this order:
-1. `PROJECT.md`: the whole project (problem, maths, claims, models, baselines, rules, decisions, timeline).
-2. `EXPERIMENTS.md`: every phase from P0 to P7, with experiments, gates and compute budgets.
-3. `PHASE0_SETUP.md`: what to do now.
-4. `PHASE1_KILL_TEST.md` and `PREREG_KILL_TEST.md`: the go/no-go experiment that runs first on the GPU.
+1. `PROJECT_V2.md`: the current project (big-paper scope, 15 Nov). It supersedes `PROJECT.md` (v1)
+   wherever they disagree; v1 is still the reference for anything V2 does not change.
+2. `PREREG_GATE0.md`: the first GPU job (Gate 0), with its thresholds.
+3. `EXPERIMENTS.md`, `PHASE1_KILL_TEST.md`, `PREREG_KILL_TEST.md`: v1 phases; the short-prompt kill
+   test (K0 to K3) runs after Gate 0 on the GO-BIG path (PROJECT_V2 Section 8).
 
-## Current phase: P0 (laptop, no GPU)
-Set up the repository, write the literature notes (with the novelty gate), write all code and CPU
-tests against a tiny pure-PyTorch backend, run the tiny end-to-end pipeline, and commit
-`PREREG_KILL_TEST.md`. Do not download any model, transcoder or dataset on the laptop (about 0.5 GB
-free disk). You may download the circuit-tracer wheel without dependencies to read its source. When
-P0 is complete, stop and tell me. P1 starts when I give you the GPU VM.
+## Current phase: Gate 0 code ready, waiting for the GPU VM
+Gate 0 code, CPU tests and the tiny rehearsal are done on the laptop. Do not download any model,
+transcoder or dataset on the laptop. Gate 0 runs with `bash scripts/run_gate0.sh` on the VM; stop at
+its report and wait for Dawar's decision (PD-G0).
 
 ## Phase status
 | Phase | What | Where | Status |
 |---|---|---|---|
-| P0 | Repo, literature notes, all code, CPU tests, tiny end-to-end run, PREREG committed | laptop | NEXT |
-| P1 | Kill test (K0 sanity, then K1, K2, K3) and report | H100 VM | waiting for the VM |
-| P2 to P7 | Paper experiments | H100 VM | only after GO and my confirmation |
+| P0 | Repo, literature notes, all v1 code, CPU tests, tiny run | laptop | done |
+| Gate 0 code | A_0, reachability, forward-mode columns, G0-A, G0-B, report, prereg draft | laptop | done, prereg awaiting Dawar |
+| Gate 0 run | G0-A and G0-B, report | RTX PRO 6000 VM | waiting for the VM |
+| After Gate 0 | K0 to K3, E1 to E5 (PROJECT_V2 Section 8) | VM | only after GO-BIG and Dawar's confirmation |
 
 ## Rules (always)
 - Never invent numbers, citations, model IDs, transcoder IDs or API details. Anything not checked
@@ -38,9 +38,9 @@ P0 is complete, stop and tell me. P1 starts when I give you the GPU VM.
   start the next phase without my go-ahead.
 - Ask me before changing a claim, model, threshold or prompt set, or before exceeding a phase's
   compute budget by more than 25%. Implementation details are yours; log them in `docs/decisions.md`.
-- The GPU is shared with Mirror_CPAL, MoE_CPAL and a CVPR project. Check `nvidia-smi` before every
-  job, cap memory per process with `cct.utils.gpu.cap_memory`, queue jobs, and never kill processes
-  you did not start.
+- Check `nvidia-smi` before every job, cap memory per process with `cct.utils.gpu.cap_memory`, queue
+  jobs, and never kill processes you did not start. The Gate 0 VM (RTX PRO 6000, 96 GB) is assumed to
+  be for this project only; if it is shared, lower the caps (`CCT_MEMORY_CAP_GB`) first.
 - On the VM, all downloads go under `$HF_HOME`. Never commit tokens, keys, weights or large artefacts.
   Use a fresh Hugging Face token.
 - Keep `results/STATUS.md` current: what ran, what is running, what is next, blockers.

@@ -2,15 +2,18 @@
 # files by scripts/download_models.py and at K0 on the VM, never from memory.
 name: gemma2_2b_plt
 model_name: google/gemma-2-2b
-# PROJECT.md lists mntss/gemma-scope-transcoders. circuit-tracer 0.5.0's preset "gemma" resolves to
-# mwhanna/gemma-scope-transcoders (utils/hf_utils.py, load_transcoder_from_hub). Decision pending with
-# Dawar before any download (docs/decisions.md, open question Q2).
-transcoder_set: mwhanna/gemma-scope-transcoders
-transcoder_set_spec: mntss/gemma-scope-transcoders
+# PROJECT_V2.md Section 11 names mntss/gemma-scope-transcoders (Q2 settled by V2, 15 Nov). Checked on
+# 15 Nov: both mntss/ and mwhanna/gemma-scope-transcoders exist with config "Gemma Scope Transcoders
+# (lowest L0)", feature_input_hook ln2.hook_normalized, feature_output_hook hook_mlp_out. The mntss
+# config points at google/gemma-scope-2b-pt-transcoders params.npz (fetched by circuit-tracer at load,
+# into $HF_HOME); mwhanna (circuit-tracer's "gemma" preset) hosts safetensors copies.
+transcoder_set: mntss/gemma-scope-transcoders
+transcoder_set_alt: mwhanna/gemma-scope-transcoders   # fallback if loading the mntss set fails (log it)
+warm_load: true        # download_models.py loads it once so the referenced Gemma Scope npz files are cached
 transcoder_type: plt
 backend: transformerlens
-dtype: null            # D10, decided at K0 (float32 if it fits under the cap, else bfloat16)
-memory_cap_gb: 30      # agree with the other projects before K0
+dtype: float32         # D10 for Gate 0: float32 (exclusive 96 GB GPU); bfloat16 only if it does not fit
+memory_cap_gb: 85      # exclusive RTX PRO 6000; the queue lowers it per lane (CCT_MEMORY_CAP_GB)
 revisions: {model: null, transcoders: null}   # (verify) written by download_models.py
 n_layers: null         # (verify) from the downloaded config
 d_model: null          # (verify)

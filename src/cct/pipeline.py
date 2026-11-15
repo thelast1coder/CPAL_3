@@ -67,7 +67,10 @@ def _dtype(name: str) -> torch.dtype:
 
 
 def run_cct(op, cfg: dict | None = None, seed: int = 0, row_seconds: float = 1.0, kappa: float = 1.0,
-            layout: GraphLayout | None = None) -> CCTResult:
+            layout: GraphLayout | None = None, local_part: Tensor | None = None) -> CCTResult:
+    """local_part: the closed-form A_0 [T, N] (PROJECT_V2 T2), known exactly at zero passes. When given,
+    sensing works on the remainder: Y_rem = Y - Phi A_0, recovery and hub columns are of A - A_0, and
+    A_0 is added back before certification and pruning."""
     cfg = merge(DEFAULT_CCT, cfg)
     t_wall = time.perf_counter()
     led = Ledger(row_seconds=row_seconds, kappa=kappa)
@@ -94,6 +97,14 @@ def run_cct(op, cfg: dict | None = None, seed: int = 0, row_seconds: float = 1.0
     Y = sense(op, Phi.to(op.dtype), sensed).double().cpu()
     c2 = op.counters.snapshot()
     led.mixed_rows += c2["mixed_rows"] - c1["mixed_rows"]
+    A0_s = None
+    if local_part is not None:
+        t0 = time.perf_counter()
+        A0_s = local_part[sensed].double().cpu()
+        Y = Y - Phi @ A0_s
+        led.other_seconds += time.perf_counter() - t0
+        diag["local_part_energy_share_est"] = float(
+            1.0 - Y.pow(2).sum() / (Y + Phi @ A0_s).pow(2).sum().clamp_min(1e-300))
 
     # -- screen --------------------------------------------------------------------------------
     t0 = time.perf_counter()
@@ -132,9 +143,11 @@ def run_cct(op, cfg: dict | None = None, seed: int = 0, row_seconds: float = 1.0
         H = compute_hub_columns(op, hub_ids, sensed)
         led.forward_passes += op.counters.forward_passes - c3["forward_passes"]
         if hub_ids.numel():
-            A_s[:, hub_ids] = H
+            A_s[:, hub_ids] = H.double().cpu() - (A0_s[:, hub_ids] if A0_s is not None else 0.0)
     diag["n_hubs"] = int(hub_ids.numel())
     diag["hub_ids"] = hub_ids
+    if A0_s is not None:
+        A_s = A_s + A0_s
     A_hat[sensed] = A_s
     if not cfg["mask"]:
         # Recovery ran without the mask (B6 / ablation A3). The graph must still be a DAG for influence
