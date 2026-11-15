@@ -1,46 +1,102 @@
-prereg_version: 1
-gate: gate0
-status: "DRAFT: thresholds proposed in PROJECT_V2.md Section 7, awaiting Dawar's confirmation"
-k07:
-  fp32_rel_err_at_most: 1.0e-4
-  bf16_rel_err_at_most: 2.0e-2
-  on_failure: "stop Gate 0: report the failure, issue no verdict"
+prereg_version: 2
+gate: gate0_premises
+source: "GATE0_PREMISES.md Sections 3 and 4 (15 Nov 2026)"
+status: "APPROVED by Dawar on 15 Nov 2026 (thresholds as proposed in GATE0_PREMISES.md); fixed from this commit"
+gpu_cap_h100_hours: 6
+dtype_rule: "fp32 where it fits, otherwise bf16; decided per model in Stage A, recorded, never mixed"
 fidelity:
   influence_weighted_node_recall_at_least: 0.95
   node_jaccard_at_least: 0.85
   seeds_required: 2
 pruning: {node_threshold: 0.8, edge_threshold: 0.98}
-g0a:
-  model: gemma2_2b
-  transcoder_sets: [gemma2_2b_plt, gemma2_2b_clt426k]
-  plt_set_suffix: plt
-  prompt_ids: [kill_test_00, kill_test_04, kill_test_09]
-  regime: D
-  sensing_m: [128, 256, 512, 1024]
-  sensing_seeds: [0, 1, 2]
-  compressible: {s95_rem_frac_T_at_most: 0.02, prompts_required_at_least: 2, sets_required_at_least: 1}
-g0b:
-  model_set: qwen3_1p7b_plt
-  n_traces: 2
-  union_levels: [1, 2, 4, 8, 16, 32]
-  reference_budget: 8192
-  convergence_budget: 4096
+reference_graphs:
+  outputs_per_trace: 17
+  sentences_per_trace: 8
+  tokens_per_sentence: 2
+  budget: 16384
+  convergence_budget: 8192
   convergence_jaccard_at_least: 0.95
-  raised_budget: 16384
-  beta_at_least: 0.6
-  n_sampled_columns: 300
-  k_eff_trace_over_k_eff_short_plt_at_most: 3.0
-  hub_s95_over_k_eff_trace_above: 10.0
-  screening: {taus: [1.0e-2, 1.0e-3, 1.0e-4], energy_recall_at_least: 0.99}
-s_proj:
-  m_prime: 16
-  at_least: 10.0
-  m_min_fallback: 1024
+stage_a:
+  pr1:
+    rel_err_fp32_at_most: 1.0e-5
+    rel_err_bf16_at_most: 2.0e-2
+    time_ratio_at_most: 1.2
+    n_mixes: 5
+    trace_prefix_tokens: 128
+    trace_mix_targets: 256
+    timing_lengths: [128, 300]
+  pr2:
+    n_positions: 3
+    n_targets: 50
+    rel_err_fp32_at_most: 1.0e-4
+    rel_err_bf16_at_most: 2.0e-2
+  pr3:
+    rel_err_at_most: 1.0e-4
+    informative_drop_local_part_if: {a0_energy_share_below: 0.10, s95_reduction_factor_below: 1.5}
+  stop_rule: "any PR1 or PR2 kill: stop, report and wait"
+stage_b:
+  pr4:
+    n_faithfulness_trace_outputs: 8
+    top_k_ablated_features: 10
+    pass:
+      median_completeness_traces_at_least: 0.70
+      completeness_gap_vs_short_at_most: 0.10
+      median_faithfulness_spearman_traces_at_least: 0.5
+      faithfulness_gap_vs_short_at_most: 0.15
+    informative_median_pruned_nodes_above: 2000
+    kill:
+      median_completeness_below: 0.50
+      faithfulness_spearman_below: 0.2
+    switch_model: {model_set: qwen3_4b_plt, time_hours_at_most: 0.5}
+  stop_rule: "PR4 kill on both models: stop and report"
+stage_c:
+  pr5:
+    pass: {remainder_abs_s95_frac_causal_at_most: 0.02, prompts_at_least: 2, set: qwen3_1p7b_plt}
+    kill: {remainder_abs_s95_frac_causal_above: 0.10, on: "every prompt of all three sets"}
+  pr6:
+    m_grid: [256, 512, 1024, 2048]
+    d2_hash_seeds: 3
+    pass: {m_at_most_T_over: 10, prompts_at_least: 2, decoder: D2, set: qwen3_1p7b_plt}
+    kill: {m_at_most_T_over: 4, on: "no Qwen3 prompt with either decoder"}
+  stop_rule: "PR5 or PR6 kill: stop"
+stage_d:
+  n_sources_per_trace: 300
+  pr7:
+    pass: {k_eff_trace_over_short_at_most: 3.0}
+    kill: {k_eff_trace_over_short_above: 10.0}
+  pr8:
+    taus: [1.0e-2, 1.0e-3, 1.0e-4]
+    pass: {mass_recall_at_least: 0.99, median_omega_frac_causal_at_most: 0.10}
+    kill: null
+  pr9:
+    m_grid: [512, 1024, 2048, 4096, 8192]
+    seeds: 3
+    non_hub_energy_share_within_eps_star_at_least: 0.90
+    kill: "no m_trace within the grid"
+stage_e:
+  pr10:
+    n_grid: [1, 2, 4, 8, 16, 32, 51]
+    timing_lengths: [64, 128, 256, full]
+    check_probes: 16
+    pass:
+      local_slope_at_least: 0.6
+      traces_at_least: 2
+      s_meas_at_least: 3.0
+      s_proj_at_least: 20.0
+      s_oracle_proj_at_least: 5.0
+    kill: {s_proj_below: 3.0, on: "every trace"}
+stage_f:
+  pr11:
+    top_dependencies_per_trace: 5
+    carriers_per_dependency: 5
+    top_quartile_auroc: true
+    pass: {auroc_minus_s4_at_least: -0.02, auroc_at_least: 0.65, nameable_at_least: 9}
+    weak: {auroc_minus_s4_below: -0.10, nameable_below: 5}
 verdicts:
-  nogo: {s95_rem_frac_T_above: 0.10, k_eff_trace_over_k_eff_short_plt_above: 10.0}
-  go_big: "compressible AND beta AND k_eff_ratio AND screening AND s_proj, on complete data only"
-  go_structure: "not NO-GO, compressible holds, and the GO-BIG condition fails only through beta or s_proj"
-  nogo_rule: "s95_rem_frac_T above 0.10 on every prompt of both sets, OR k_eff ratio above 10"
-  undecided: "any other combination; the failed conditions are listed for Dawar"
-  partial: "a G0-B part did not run: verdict on what exists, labelled PARTIAL, never GO-BIG"
-  k07_failure: "STOPPED: no verdict"
+  order: [NO-GO, SWITCH-MODEL, GO-BIG, GO-METHOD, GO-STRUCTURE, UNDECIDED]
+  NO-GO: "PR1 kill, or PR5 kill, or PR6 kill, or (PR10 kill and PR4 kill)"
+  SWITCH-MODEL: "PR4 fails on Qwen3-1.7B but passes on Qwen3-4B"
+  GO-BIG: "PR1, PR2, PR4 to PR11 all pass (PR3 informative)"
+  GO-METHOD: "everything passes except PR11"
+  GO-STRUCTURE: "PR1, PR5, PR6 pass; PR7, PR9 or PR10 fail"
+  UNDECIDED: "anything not covered: write the report and stop; Dawar decides"

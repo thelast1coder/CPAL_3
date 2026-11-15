@@ -1,208 +1,164 @@
-# PREREG_GATE0.md: pre-registration of Gate 0
+# PREREG_GATE0.md: preregistration of Gate 0 (premise tests)
 
-Status: DRAFT: thresholds proposed in PROJECT_V2.md Section 7, awaiting Dawar's confirmation.
+**Status: APPROVED by Dawar on 15 November 2026. Thresholds are fixed from this commit.** The commit
+hash is recorded in results/STATUS.md before the first real-model run. Any later change goes in the
+deviations log below, with its reason, and is reported.
 
-Commit this file and `configs/prereg_gate0.yaml` in their own commit before the first real-model run
-of Gate 0, and write the hash into `results/STATUS.md`. After that, nothing in Sections 1 to 6 changes.
-Anything done differently goes in Section 7. Settings that are not decision thresholds (budgets, grids,
-batch sizes) live in `configs/experiments/gate0.yaml`.
+This preregistration replaces the earlier Gate 0 draft (commit 60f3720, PROJECT_V2 Section 7). The
+tests, measurements and verdict table are those of GATE0_PREMISES.md Sections 2, 3 and 4, committed
+in the same commit; this file adds the operational definitions needed to compute them and the
+machine-readable thresholds.
 
-## 1. Purpose
-Gate 0 tests the premise of the whole-trace paper (PROJECT_V2.md Sections 2 to 7) before any further
-GPU time is spent. It asks four questions:
-- **G0-A, short prompts:** once the closed-form local part A_0 is removed, is the remainder A - A_0
-  compressible (few large entries per column), and how many mixed passes does sensing need in practice
-  (the constant C)?
-- **G0-B, union growth:** when circuit-tracer explains n outputs of one reasoning trace, does the
-  union of rows that truncation needs grow like n^beta with beta large enough for sensing to win?
-- **G0-B, columns at trace length:** is the remainder still sparse at trace length (k_eff_trace close
-  to k_eff_short), and does attention reachability screening keep the column energy?
-- **Projection:** does the measured cost law project a speed-up of at least 10x over union-truncation
-  at trace length?
+## 1. What is measured
+GATE0_PREMISES.md Section 3, premises PR1 to PR11 in Stages A to F, on:
+- Gemma-2-2B with `mntss/gemma-scope-transcoders` (PLT) and `mntss/clt-gemma-2-2b-426k` (CLT);
+- Qwen3-1.7B (thinking mode) with `mwhanna/qwen3-1.7b-transcoders-lowl0` (PLT; config model_name
+  Qwen/Qwen3-1.7B); for SWITCH-MODEL, Qwen3-4B with `mwhanna/qwen3-4b-transcoders`.
+- Prompts: configs/prompts/kill_test.json ids kill_test_00, kill_test_04 and kill_test_12 ("calc: 36+59=")
+  for Gemma; configs/prompts/gate0_qwen_short.json for Qwen3; 3 traces generated once by
+  scripts/gen_traces.py from configs/prompts/gate0_traces.json (one per category: arithmetic word
+  problem, multi-hop factual question, logic puzzle) and committed before any analysis.
 
-The answer is one of GO-BIG, GO-STRUCTURE, NO-GO or UNDECIDED (Section 4). Dawar takes decision PD-G0
-from the report. Nothing after Gate 0 starts without that decision.
+## 2. Operational definitions (fixed before data)
+- **s95 (squared):** smallest number of entries of a column holding 95% of its squared norm.
+  **s95 (absolute):** smallest number holding 95% of its absolute (L1) mass. Columns are over
+  feature targets (logit rows excluded) unless stated.
+- **Causal candidate set of a source:** feature targets at a later read layer (at least one write
+  layer below the read layer) and the same or a later position. Fractions in PR5, PR7 and PR8 divide
+  by its size, per column.
+- **Energy-weighted median:** median over columns weighted by the column's squared norm.
+- **k_eff:** energy-weighted median of the remainder's absolute-value s95 (entries, not fraction).
+- **Remainder:** A - A_0, with A_0 the closed-form local part (cct/local_part.py). The PR3 check uses
+  the frozen backward pass with every attention output stop-gradiented (forward values unchanged).
+- **Per-column relative error:** ||a_hat_s - a_s|| / ||a_s|| on the remainder column. **epsilon***:
+  over the PR6 runs on the Qwen3 prompts, the largest energy-weighted per-column error among runs
+  whose pruned graph meets fidelity, taken at the smallest m where fidelity holds on at least 2 of 3
+  prompts (the minimum over decoders if both qualify).
+- **Hub (PR7):** a sampled column whose simulated D2 error is above epsilon* at m = 8192.
+- **Mass recall (PR8):** absolute mass of the column inside Omega_s divided by its total absolute
+  mass, energy-weighted over columns.
+- **Count-sketch (D2):** R = 5 repetitions of B = floor(m / 5) buckets; each target hashed to a
+  bucket with a random sign in each repetition; estimate = median over repetitions of the signed
+  bucket value; per column, the B / 4 largest estimates inside Omega_s (PR9) or the causal set (PR6)
+  are kept, the rest set to zero. "3 hash seeds" means 3 independent sketches (seeds 0, 1, 2); fidelity
+  "on 2 of 3 seeds" as for D1. (R = 3 was rejected on synthetic data before any real run: with
+  thousands of targets, a median of 3 lets collisions with heavy entries create false entries.)
+- **Truncation union, oracle union and costs (PR10):** as GATE0_PREMISES.md Section 3, Stage E; row
+  costs weighted by measured pass time at prefix lengths 64, 128, 256 and full, interpolated
+  linearly in length.
+- **Faithfulness (PR4):** per output, Spearman correlation over its top 10 influence features between
+  the graph-predicted logit change (direct-path attribution of the feature to the output logit times
+  minus its activation) and the change measured by setting the feature to zero with circuit-tracer's
+  feature_intervention (attention frozen as its default).
+- **Sentences (PR11):** Thought Anchors' segmentation rule (verified against their code before the
+  trace analysis; the rule used is recorded in the report).
 
-## 2. Models, transcoders, prompts
-**G0-A (short prompts).**
-- Model: Gemma-2-2B (`google/gemma-2-2b`, revision recorded from the download).
-- Transcoder sets: `gemma2_2b_plt` (`mntss/gemma-scope-transcoders`, as PROJECT_V2 Section 11; Gemma
-  Scope lowest-L0 transcoders, reading `ln2.hook_normalized`) and `gemma2_2b_clt426k`
-  (`mntss/clt-gemma-2-2b-426k`, reading `hook_resid_mid`). Both repositories and their config files
-  were checked on Hugging Face on 15 November 2026; revisions are recorded at download.
-  The PLT set is the one whose name ends with `plt`.
-- Prompts: `kill_test_00`, `kill_test_04`, `kill_test_09` from `configs/prompts/kill_test.json`
-  (the three verified canonical prompts: two-hop "Dallas", single-hop "Michael Jordan", antonym
-  "small").
-- Exact graphs: circuit-tracer defaults, regime D (PHASE1_KILL_TEST.md Section 5), with the full row
-  matrix saved. dtype per set as decided at K0 (D10).
-
-**G0-B (whole traces).**
-- Model: Qwen3-1.7B (`Qwen/Qwen3-1.7B`) with thinking mode on.
-- Transcoders: `mwhanna/qwen3-1.7b-transcoders-lowl0` (PLT).
-- Traces: 2 traces, generated once by the rule in `scripts/gen_traces.py` from the problems in
-  `configs/prompts/gate0_traces.json` (greedy decoding, settings in `configs/experiments/gate0.yaml`,
-  section `g0b.generation`; traces of 200 to 300 generated tokens, with the fallback range 150 to 400
-  only if fewer than 2 fall in the main range). The trace text and settings are committed before any
-  attribution run on them.
-
-## 3. Measurements and exact definitions
-**Column statistics.**
-- s95 of a column: the smallest number of its entries holding 95% of its squared norm
-  (`cct.killtest.s95`).
-- Column statistics are taken over feature targets; logit rows are excluded.
-- Energy-weighted median: the median of a per-column statistic with each column weighted by its
-  squared norm (`cct.killtest.weighted_median`).
-- Remainder: A - A_0, where A_0 is the closed-form local part (PROJECT_V2.md T2).
-- T: the number of targets in the exact regime-D matrix of the prompt.
-- s95_rem_frac_T: the energy-weighted median remainder s95 divided by T.
-- k_eff_short for a transcoder set: the median over the 3 prompts of the energy-weighted median
-  remainder s95.
-- k_eff_trace: the energy-weighted median remainder s95 over the sampled exact columns of the trace,
-  taken over all feature targets of the full trace. The restriction to the screening set Omega_s is
-  reported, not used.
-- Also reported (not used for the decision): the energy share of A_0, the energy-weighted median s95 of
-  A, the remainder s95 as a fraction of |Omega_s|, and hub energy share by node kind.
-
-**K0.7 sanity (closed-form local part).** The rows of the closed-form A_0 must equal the rows of the
-attention-detached backward pass, with relative Frobenius error at most 1e-4 in float32 or at most
-2e-2 in bfloat16. Checked on each G0-A prompt and set, and on the trace used for the sampled columns.
-Any failure stops Gate 0: the failure is reported and no verdict is issued (verdict STOPPED).
-
-**Fidelity.** Influence-weighted node recall at least 0.95 and node Jaccard at least 0.85 against the
-reference pruned graph (node threshold 0.8, edge threshold 0.98). The same definition is used for
-truncation and for sensing.
-
-**Truncation budget (G0-A).** c_trunc: the smallest budget on the truncation grid of
-`configs/experiments/gate0.yaml` that meets fidelity.
-
-**Practical sensing constant C (G0-A).**
-- For one prompt: m_min is the smallest m in {128, 256, 512, 1024} at which sensing of A - A_0 (with
-  A_0 added back before pruning) meets fidelity on at least 2 of the 3 sensing seeds.
-- C for that prompt = m_min / (k_eff ln(T / k_eff)), with k_eff the prompt's energy-weighted median
-  remainder s95 and T its number of targets.
-- If no m on the grid works for a prompt, its C is taken as 1024 / (k_eff ln(T / k_eff)) and the
-  prompt is flagged in the report.
-- C_short: the median over the 3 prompts of the PLT set.
-
-**Union growth (G0-B).**
-- Explained outputs n in {1, 2, 4, 8, 16, 32}, nested and evenly spaced, always including the final
-  answer token.
-- For each output, circuit-tracer runs on the prefix ending there. Its reference graph uses a budget of
-  8192 rows; convergence is checked against 4096 rows (node Jaccard at least 0.95), and the budget is
-  raised to 16384 when the check fails.
-- c_i: the smallest truncation budget meeting fidelity against output i's reference graph.
-- |U(n)|: the number of distinct (layer, position, feature) rows across the truncation prefixes of the
-  first n outputs.
-- beta per trace: the ordinary least squares slope of log |U(n)| on log n over the completed nested
-  levels. beta: the mean over the 2 traces.
-- c: the median of c_i over all explained outputs.
-- The run stops at the last complete level within 60 minutes; incomplete levels are not used.
-
-**Sampled exact columns (G0-B).** 300 sources, stratified by node kind (feature, error, embedding) and
-position (first token, early, middle, late), computed exactly with forward-mode passes. k_eff_trace as
-above. f_hub: the share of sampled columns whose remainder s95 is above 10 x k_eff_trace.
-
-**Screening recall (G0-B).** For each tau in {1e-2, 1e-3, 1e-4}, Omega_s is the set of targets whose
-attention rollout reachability from source s is at least tau. Recall at tau: over the sampled columns,
-the sum of squared column energy inside Omega_s divided by the total squared energy (energy-weighted).
-Screening passes if recall is at least 0.99 at some tau; the mean |Omega_s| / T is reported at the
-largest passing tau.
-
-**Projected speed-up (G0-B).**
-
-    S_proj(L) = c L^beta / (C_short k_eff_trace ln(T_trace / k_eff_trace) + kappa H_est + m')
-
-- L: the median number of generated tokens of the 2 traces.
-- T_trace: the number of targets of the full trace.
-- m' = 16 (fresh error-estimate probes).
-- kappa: forward-mode column cost per backward row, measured on the trace.
-- H_est = f_hub x N_trace, with N_trace the number of sources of the full trace.
-
-## 4. Decision table
-| Verdict | Condition |
-|---|---|
-| STOPPED | K0.7 fails anywhere. No verdict; report only. |
-| GO-BIG | All of: (a) compressible: s95_rem_frac_T at most 0.02 on at least 2 of 3 prompts, for at least one transcoder set; (b) beta at least 0.6; (c) k_eff_trace at most 3 x k_eff_short(PLT); (d) screening recall at least 0.99 at some tau; (e) S_proj(L) at least 10. Never issued on partial data. |
-| NO-GO | s95_rem_frac_T above 0.10 on every prompt of both sets, or k_eff_trace above 10 x k_eff_short(PLT). |
-| GO-STRUCTURE | Not NO-GO, (a) holds, and the GO-BIG condition fails only because beta is below 0.6 or S_proj is below 10 (or both). |
-| UNDECIDED | Any other combination. The failed conditions are listed and Dawar decides. |
-
-NO-GO is checked before GO-BIG and GO-STRUCTURE. If a G0-B part did not run (or a G0-A set or prompt is
-missing), the verdict is computed on what exists and labelled PARTIAL with the missing items listed.
-On partial data, NO-GO and GO-STRUCTURE may be issued from the conditions that were evaluated; GO-BIG is
-never issued, and a case that would otherwise be GO-BIG is UNDECIDED (PARTIAL).
-
-The rule is implemented in `cct.gate0.gate0_verdict` and applied automatically by
-`scripts/gate0_report.py`.
-
-## 5. What is reported
-`results/gate0/GATE0_REPORT.md` and `results/gate0/gate0.json`, starting with a three-line plain
-summary, then:
-- per set and prompt: T, N, K0.7 error and dtype, energy share of A_0, s95 of A and of the remainder,
-  s95_rem_frac_T, hub share by kind, c_trunc, m_min, fidelity and recovery time by m;
-- k_eff_short and C_short, with flagged prompts;
-- the union growth table |U(n)| per trace, beta per trace and mean, c, and the number of outputs
-  without a c;
-- the columns summary: T_trace, N_trace, K0.7, k_eff_trace, f_hub, screening recall and |Omega_s| / T
-  at each tau;
-- S_proj(L) with each term of the formula;
-- what the numbers mean, the verdict with every condition (value, threshold, pass), and the line
-  "Stop: waiting for Dawar's decision (PD-G0)".
-Costs are counted in full: mixed passes, forward-mode passes (through kappa), recovery time and the
-m' probes. Every result file stores config, seed, git hash, package versions, GPU name and wall time.
-
-## 6. Thresholds (machine-readable copy; must equal configs/prereg_gate0.yaml, tests/test_gate0_decision.py)
+## 3. Thresholds (machine-readable, identical to configs/prereg_gate0.yaml)
 ```yaml
-prereg_version: 1
-gate: gate0
-status: "DRAFT: thresholds proposed in PROJECT_V2.md Section 7, awaiting Dawar's confirmation"
-k07:
-  fp32_rel_err_at_most: 1.0e-4
-  bf16_rel_err_at_most: 2.0e-2
-  on_failure: "stop Gate 0: report the failure, issue no verdict"
+prereg_version: 2
+gate: gate0_premises
+source: "GATE0_PREMISES.md Sections 3 and 4 (15 Nov 2026)"
+status: "APPROVED by Dawar on 15 Nov 2026 (thresholds as proposed in GATE0_PREMISES.md); fixed from this commit"
+gpu_cap_h100_hours: 6
+dtype_rule: "fp32 where it fits, otherwise bf16; decided per model in Stage A, recorded, never mixed"
 fidelity:
   influence_weighted_node_recall_at_least: 0.95
   node_jaccard_at_least: 0.85
   seeds_required: 2
 pruning: {node_threshold: 0.8, edge_threshold: 0.98}
-g0a:
-  model: gemma2_2b
-  transcoder_sets: [gemma2_2b_plt, gemma2_2b_clt426k]
-  plt_set_suffix: plt
-  prompt_ids: [kill_test_00, kill_test_04, kill_test_09]
-  regime: D
-  sensing_m: [128, 256, 512, 1024]
-  sensing_seeds: [0, 1, 2]
-  compressible: {s95_rem_frac_T_at_most: 0.02, prompts_required_at_least: 2, sets_required_at_least: 1}
-g0b:
-  model_set: qwen3_1p7b_plt
-  n_traces: 2
-  union_levels: [1, 2, 4, 8, 16, 32]
-  reference_budget: 8192
-  convergence_budget: 4096
+reference_graphs:
+  outputs_per_trace: 17
+  sentences_per_trace: 8
+  tokens_per_sentence: 2
+  budget: 16384
+  convergence_budget: 8192
   convergence_jaccard_at_least: 0.95
-  raised_budget: 16384
-  beta_at_least: 0.6
-  n_sampled_columns: 300
-  k_eff_trace_over_k_eff_short_plt_at_most: 3.0
-  hub_s95_over_k_eff_trace_above: 10.0
-  screening: {taus: [1.0e-2, 1.0e-3, 1.0e-4], energy_recall_at_least: 0.99}
-s_proj:
-  m_prime: 16
-  at_least: 10.0
-  m_min_fallback: 1024
+stage_a:
+  pr1:
+    rel_err_fp32_at_most: 1.0e-5
+    rel_err_bf16_at_most: 2.0e-2
+    time_ratio_at_most: 1.2
+    n_mixes: 5
+    trace_prefix_tokens: 128
+    trace_mix_targets: 256
+    timing_lengths: [128, 300]
+  pr2:
+    n_positions: 3
+    n_targets: 50
+    rel_err_fp32_at_most: 1.0e-4
+    rel_err_bf16_at_most: 2.0e-2
+  pr3:
+    rel_err_at_most: 1.0e-4
+    informative_drop_local_part_if: {a0_energy_share_below: 0.10, s95_reduction_factor_below: 1.5}
+  stop_rule: "any PR1 or PR2 kill: stop, report and wait"
+stage_b:
+  pr4:
+    n_faithfulness_trace_outputs: 8
+    top_k_ablated_features: 10
+    pass:
+      median_completeness_traces_at_least: 0.70
+      completeness_gap_vs_short_at_most: 0.10
+      median_faithfulness_spearman_traces_at_least: 0.5
+      faithfulness_gap_vs_short_at_most: 0.15
+    informative_median_pruned_nodes_above: 2000
+    kill:
+      median_completeness_below: 0.50
+      faithfulness_spearman_below: 0.2
+    switch_model: {model_set: qwen3_4b_plt, time_hours_at_most: 0.5}
+  stop_rule: "PR4 kill on both models: stop and report"
+stage_c:
+  pr5:
+    pass: {remainder_abs_s95_frac_causal_at_most: 0.02, prompts_at_least: 2, set: qwen3_1p7b_plt}
+    kill: {remainder_abs_s95_frac_causal_above: 0.10, on: "every prompt of all three sets"}
+  pr6:
+    m_grid: [256, 512, 1024, 2048]
+    d2_hash_seeds: 3
+    pass: {m_at_most_T_over: 10, prompts_at_least: 2, decoder: D2, set: qwen3_1p7b_plt}
+    kill: {m_at_most_T_over: 4, on: "no Qwen3 prompt with either decoder"}
+  stop_rule: "PR5 or PR6 kill: stop"
+stage_d:
+  n_sources_per_trace: 300
+  pr7:
+    pass: {k_eff_trace_over_short_at_most: 3.0}
+    kill: {k_eff_trace_over_short_above: 10.0}
+  pr8:
+    taus: [1.0e-2, 1.0e-3, 1.0e-4]
+    pass: {mass_recall_at_least: 0.99, median_omega_frac_causal_at_most: 0.10}
+    kill: null
+  pr9:
+    m_grid: [512, 1024, 2048, 4096, 8192]
+    seeds: 3
+    non_hub_energy_share_within_eps_star_at_least: 0.90
+    kill: "no m_trace within the grid"
+stage_e:
+  pr10:
+    n_grid: [1, 2, 4, 8, 16, 32, 51]
+    timing_lengths: [64, 128, 256, full]
+    check_probes: 16
+    pass:
+      local_slope_at_least: 0.6
+      traces_at_least: 2
+      s_meas_at_least: 3.0
+      s_proj_at_least: 20.0
+      s_oracle_proj_at_least: 5.0
+    kill: {s_proj_below: 3.0, on: "every trace"}
+stage_f:
+  pr11:
+    top_dependencies_per_trace: 5
+    carriers_per_dependency: 5
+    top_quartile_auroc: true
+    pass: {auroc_minus_s4_at_least: -0.02, auroc_at_least: 0.65, nameable_at_least: 9}
+    weak: {auroc_minus_s4_below: -0.10, nameable_below: 5}
 verdicts:
-  nogo: {s95_rem_frac_T_above: 0.10, k_eff_trace_over_k_eff_short_plt_above: 10.0}
-  go_big: "compressible AND beta AND k_eff_ratio AND screening AND s_proj, on complete data only"
-  go_structure: "not NO-GO, compressible holds, and the GO-BIG condition fails only through beta or s_proj"
-  nogo_rule: "s95_rem_frac_T above 0.10 on every prompt of both sets, OR k_eff ratio above 10"
-  undecided: "any other combination; the failed conditions are listed for Dawar"
-  partial: "a G0-B part did not run: verdict on what exists, labelled PARTIAL, never GO-BIG"
-  k07_failure: "STOPPED: no verdict"
+  order: [NO-GO, SWITCH-MODEL, GO-BIG, GO-METHOD, GO-STRUCTURE, UNDECIDED]
+  NO-GO: "PR1 kill, or PR5 kill, or PR6 kill, or (PR10 kill and PR4 kill)"
+  SWITCH-MODEL: "PR4 fails on Qwen3-1.7B but passes on Qwen3-4B"
+  GO-BIG: "PR1, PR2, PR4 to PR11 all pass (PR3 informative)"
+  GO-METHOD: "everything passes except PR11"
+  GO-STRUCTURE: "PR1, PR5, PR6 pass; PR7, PR9 or PR10 fail"
+  UNDECIDED: "anything not covered: write the report and stop; Dawar decides"
 ```
 
-## 7. Deviations log
-| Date | What changed | Why | Effect on the decision |
-|---|---|---|---|
-| | | | |
+## 4. Deviations log
+| Date | What | Why |
+|---|---|---|

@@ -1,0 +1,66 @@
+# Gate 0 premise tests (GATE0_PREMISES.md). Settings only; thresholds live in configs/prereg_gate0.yaml.
+seed: 0
+sets:
+  gemma_plt: gemma2_2b_plt
+  gemma_clt: gemma2_2b_clt426k
+  qwen: qwen3_1p7b_plt
+  qwen_4b: qwen3_4b_plt          # SWITCH-MODEL only
+prompts:
+  gemma: {file: configs/prompts/kill_test.json, ids: [kill_test_00, kill_test_04, kill_test_12]}
+  qwen: {file: configs/prompts/gate0_qwen_short.json, ids: [qwen_short_00, qwen_short_01, qwen_short_02]}
+traces:
+  problems_file: configs/prompts/gate0_traces.json
+  traces_file: results/gate0/traces.json
+  categories: [arithmetic, multi_hop, logic]     # one trace per category
+  generated_tokens_range: [200, 300]
+  fallback_generated_tokens_range: [150, 400]
+  generation: {enable_thinking: true, do_sample: false, max_new_tokens: 512, dtype: float32}
+  sentences_per_trace: 8          # sampled sentences, spread over the second half
+  tokens_per_sentence: 2
+exact:                            # circuit-tracer CLI defaults
+  max_n_logits: 10
+  desired_logit_prob: 0.95
+  batch_size_short: 256
+  batch_size_trace: 64
+  update_interval: 4
+  node_threshold: 0.8
+  edge_threshold: 0.98
+reference_graphs: {budget: 16384, convergence_budget: 8192, raised_budget: 32768}
+stage_a:
+  pr1_prompts: 2
+  pr1_mixes: 5
+  pr1_trace_prefix: 128
+  pr1_trace_targets: 256
+  timing_lengths: [128, 300]
+  timing_repeats: 5
+  pr2_positions: 3
+  pr2_targets: 50
+  pr3_prompts: 2
+stage_b:
+  faithfulness_trace_outputs: 8
+  top_k_features: 10
+stage_c:
+  m_grid: [256, 512, 1024, 2048]
+  d1: {recovery: {algo: omp, k_max: 32, device: cuda, dtype: float32}, hubs: {enabled: true, rho_hub: 0.3, budget: 128},
+       screening: {enabled: true, q: 0.995, safety: 2.0}, certify: {enabled: false}, exact_logit_rows: true, mask: true}
+  d1_seeds: [0, 1, 2]
+  d2_seeds: [0, 1, 2]
+  d2_repetitions: 5
+stage_d:
+  n_sources: 300
+  strata_kinds: [feature, error, token]
+  strata_positions: [first, early, middle, late]
+  forward_batch: 32
+  taus: [1.0e-2, 1.0e-3, 1.0e-4]
+  m_grid: [512, 1024, 2048, 4096, 8192]
+  seeds: [0, 1, 2]
+  d2_repetitions: 5
+stage_e:
+  n_grid: [1, 2, 4, 8, 16, 32, 51]
+  timing_lengths: [64, 128, 256, full]
+  check_probes: 16
+  c_grid: [16, 32, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6144, 8192, 12288, 16384]
+stage_f:
+  top_dependencies_per_trace: 5
+  carriers_per_dependency: 5
+  filler_token: " ."              # neutral filler, repeated to equal token length (checked to tokenise 1:1)

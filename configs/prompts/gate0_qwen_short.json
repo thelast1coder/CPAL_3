@@ -1,0 +1,23 @@
+[
+ {
+  "id": "qwen_short_00",
+  "category": "two_hop",
+  "prompt": "Fact: the capital of the state containing Dallas is",
+  "expected": " Austin",
+  "source": "same string as kill_test_00 (Gemma canonical)"
+ },
+ {
+  "id": "qwen_short_01",
+  "category": "single_hop",
+  "prompt": "Fact: Michael Jordan plays the sport of",
+  "expected": " basketball",
+  "source": "same string as kill_test_04"
+ },
+ {
+  "id": "qwen_short_02",
+  "category": "addition",
+  "prompt": "calc: 36+59=",
+  "expected": "95",
+  "source": "same string as kill_test_12"
+ }
+]

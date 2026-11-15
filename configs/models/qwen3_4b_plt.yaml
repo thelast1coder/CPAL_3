@@ -1,0 +1,11 @@
+# Qwen3-4B with circuit-tracer's Qwen-3 PLTs (README, checked 15 Nov 2026; config model_name Qwen/Qwen3-4B,
+# hooks mlp.hook_in / mlp.hook_out). Used only on the SWITCH-MODEL path of Gate 0.
+name: qwen3_4b_plt
+model_name: Qwen/Qwen3-4B
+transcoder_set: mwhanna/qwen3-4b-transcoders
+transcoder_type: plt
+backend: transformerlens
+dtype: float32
+memory_cap_gb: 85
+revisions: {model: null, transcoders: null}
+timing: {row_seconds: null, kappa: null}
