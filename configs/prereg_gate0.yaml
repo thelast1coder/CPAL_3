@@ -1,0 +1,46 @@
+prereg_version: 1
+gate: gate0
+status: "DRAFT: thresholds proposed in PROJECT_V2.md Section 7, awaiting Dawar's confirmation"
+k07:
+  fp32_rel_err_at_most: 1.0e-4
+  bf16_rel_err_at_most: 2.0e-2
+  on_failure: "stop Gate 0: report the failure, issue no verdict"
+fidelity:
+  influence_weighted_node_recall_at_least: 0.95
+  node_jaccard_at_least: 0.85
+  seeds_required: 2
+pruning: {node_threshold: 0.8, edge_threshold: 0.98}
+g0a:
+  model: gemma2_2b
+  transcoder_sets: [gemma2_2b_plt, gemma2_2b_clt426k]
+  plt_set_suffix: plt
+  prompt_ids: [kill_test_00, kill_test_04, kill_test_09]
+  regime: D
+  sensing_m: [128, 256, 512, 1024]
+  sensing_seeds: [0, 1, 2]
+  compressible: {s95_rem_frac_T_at_most: 0.02, prompts_required_at_least: 2, sets_required_at_least: 1}
+g0b:
+  model_set: qwen3_1p7b_plt
+  n_traces: 2
+  union_levels: [1, 2, 4, 8, 16, 32]
+  reference_budget: 8192
+  convergence_budget: 4096
+  convergence_jaccard_at_least: 0.95
+  raised_budget: 16384
+  beta_at_least: 0.6
+  n_sampled_columns: 300
+  k_eff_trace_over_k_eff_short_plt_at_most: 3.0
+  hub_s95_over_k_eff_trace_above: 10.0
+  screening: {taus: [1.0e-2, 1.0e-3, 1.0e-4], energy_recall_at_least: 0.99}
+s_proj:
+  m_prime: 16
+  at_least: 10.0
+  m_min_fallback: 1024
+verdicts:
+  nogo: {s95_rem_frac_T_above: 0.10, k_eff_trace_over_k_eff_short_plt_above: 10.0}
+  go_big: "compressible AND beta AND k_eff_ratio AND screening AND s_proj, on complete data only"
+  go_structure: "not NO-GO, compressible holds, and the GO-BIG condition fails only through beta or s_proj"
+  nogo_rule: "s95_rem_frac_T above 0.10 on every prompt of both sets, OR k_eff ratio above 10"
+  undecided: "any other combination; the failed conditions are listed for Dawar"
+  partial: "a G0-B part did not run: verdict on what exists, labelled PARTIAL, never GO-BIG"
+  k07_failure: "STOPPED: no verdict"
