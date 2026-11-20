@@ -23,7 +23,7 @@
     "tiny_plt": {
       "verdict": "NO-GO",
       "n_meet": 0,
-      "speedup": 1.4172230894901188,
+      "speedup": 1.2661688886697986,
       "rel_frob": 2.6584426636083778e-08,
       "rel_frob_tol": 0.01
     }
@@ -122,7 +122,7 @@
     },
     "seed": null,
     "git": {
-      "hash": "7ecc83534940a9584abc8d56b440c36e96076fa4",
+      "hash": "f53f188a52f12d2704e08f9c7e93c4f0b84a1736",
       "dirty": true
     },
     "packages": {
@@ -139,6 +139,6 @@
     },
     "gpu": "cpu (AMD64)",
     "wall_seconds": null,
-    "utc": "2026-11-15T10:48:21+00:00"
+    "utc": "2026-11-20T12:44:28+00:00"
   }
 }

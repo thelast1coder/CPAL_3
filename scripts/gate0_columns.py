@@ -40,9 +40,9 @@ def trace_tokens(tr: dict) -> torch.Tensor:
     raise KeyError(f"no token ids in trace record (keys: {sorted(tr)})")
 
 
-def stratified_sources(sm, n_pos: int, n: int, kinds: list[str], buckets: list[str], gen: torch.Generator) -> torch.Tensor:
-    """Equal share per (kind, position bucket) stratum; strata with too few nodes give their share to the
-    others. Position buckets: first = position 0, then thirds of positions 1..n_pos-1."""
+def source_strata(sm, n_pos: int, kinds: list[str], buckets: list[str]) -> torch.Tensor:
+    """Stratum id per source (kind-major: kinds[i] x buckets[j] -> i * len(buckets) + j), -1 if none.
+    Position buckets: first = position 0, then thirds of positions 1..n_pos-1."""
     edges = torch.linspace(1, n_pos, 4).floor().long().tolist()
 
     def bucket_of(pos: torch.Tensor, b: str) -> torch.Tensor:
@@ -51,12 +51,22 @@ def stratified_sources(sm, n_pos: int, n: int, kinds: list[str], buckets: list[s
         i = {"early": 0, "middle": 1, "late": 2}[b]
         return (pos >= edges[i]) & (pos < (edges[i + 1] if i < 2 else n_pos))
 
+    out = torch.full((len(sm),), -1, dtype=torch.long)
+    for ki, k in enumerate(kinds):
+        for bi, b in enumerate(buckets):
+            out[(sm.kind == KINDS[k]) & bucket_of(sm.pos, b)] = ki * len(buckets) + bi
+    return out
+
+
+def stratified_sources(sm, n_pos: int, n: int, kinds: list[str], buckets: list[str], gen: torch.Generator) -> torch.Tensor:
+    """Equal share per (kind, position bucket) stratum; strata with too few nodes give their share to the
+    others. Position buckets: first = position 0, then thirds of positions 1..n_pos-1."""
+    sid = source_strata(sm, n_pos, kinds, buckets)
     strata = []
-    for k in kinds:
-        for b in buckets:
-            sel = torch.nonzero((sm.kind == KINDS[k]) & bucket_of(sm.pos, b)).flatten()
-            # zero-vector sources (position 0 features and errors are zeroed) are useless; keep tokens
-            strata.append(sel[torch.randperm(sel.numel(), generator=gen)])
+    for k in range(len(kinds) * len(buckets)):
+        sel = torch.nonzero(sid == k).flatten()
+        # zero-vector sources (position 0 features and errors are zeroed) are useless; keep tokens
+        strata.append(sel[torch.randperm(sel.numel(), generator=gen)])
     picked: list[torch.Tensor] = [s[:0] for s in strata]
     remaining = n
     live = [i for i, s in enumerate(strata) if s.numel()]

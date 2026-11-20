@@ -220,10 +220,16 @@ def main() -> None:
             log.info(f"{set_name} {pr['id']}: T={st['T']} a0_share={st['a0_energy_share']:.3f} "
                      f"s95_rem_frac={st['s95_rem_frac_T']:.4f} k07={checks['k07_rel_err']:.2e} "
                      f"c_trunc={tr['c_trunc']} m_min={res['m_min']}")
-            tol = pre["k07"]["fp32_rel_err_at_most" if checks["dtype"] in ("float32", "float64") else "bf16_rel_err_at_most"]
-            if not checks["k07_rel_err"] <= tol:
-                log.error(f"K0.7 FAILED ({checks['k07_rel_err']:.3e} > {tol}): Gate 0 stops (PREREG_GATE0)")
-                raise SystemExit(3)
+            # The A_0 check is PR3 in prereg version 2 (stage_a.pr3; bf16 tolerance as PR1/PR2). PR3 is not a
+            # kill: log the failure and carry on (GATE0_PREMISES Section 3, PR3).
+            sa = pre["stage_a"]
+            tol = (sa["pr3"]["rel_err_at_most"] if checks["dtype"] in ("float32", "float64")
+                   else sa["pr2"]["rel_err_bf16_at_most"])
+            res["k07_pass"] = bool(checks["k07_rel_err"] <= tol)
+            atomic_write_json(path, res)
+            if not res["k07_pass"]:
+                log.error(f"A_0 check (PR3) FAILED ({checks['k07_rel_err']:.3e} > {tol}): not a kill; fix the "
+                          "formula or drop A_0 subtraction and record it")
         del model
         if torch.cuda.is_available():
             torch.cuda.empty_cache()

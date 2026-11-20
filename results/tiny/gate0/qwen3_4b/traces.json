@@ -1,0 +1,899 @@
+{
+  "traces": [
+    {
+      "id": "tiny_trace_00",
+      "category": "arithmetic",
+      "question": null,
+      "answer": null,
+      "token_ids": [
+        24,
+        3,
+        39,
+        23,
+        15,
+        48,
+        10,
+        30,
+        52,
+        11,
+        45,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        62,
+        58,
+        44,
+        2,
+        52,
+        33,
+        17,
+        33,
+        17,
+        33,
+        17,
+        15,
+        62,
+        58,
+        14,
+        58,
+        26
+      ],
+      "n_prompt_tokens": 8,
+      "n_generated": 72,
+      "n_total_tokens": 80,
+      "text": null,
+      "ended_with_eos": true,
+      "answer_found": false,
+      "answer_position": 79,
+      "end_position": 79,
+      "think_start_index": 8,
+      "think_end_index": null,
+      "sentences": [
+        [
+          8,
+          12
+        ],
+        [
+          12,
+          16
+        ],
+        [
+          16,
+          20
+        ],
+        [
+          20,
+          24
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          28,
+          32
+        ],
+        [
+          32,
+          36
+        ],
+        [
+          36,
+          40
+        ],
+        [
+          40,
+          44
+        ],
+        [
+          44,
+          48
+        ],
+        [
+          48,
+          52
+        ],
+        [
+          52,
+          56
+        ],
+        [
+          56,
+          60
+        ],
+        [
+          60,
+          64
+        ],
+        [
+          64,
+          68
+        ],
+        [
+          68,
+          72
+        ],
+        [
+          72,
+          79
+        ]
+      ],
+      "n_sentences": 17,
+      "sampled_outputs": [
+        {
+          "position": 79,
+          "sentence_index": null,
+          "kind": "answer"
+        },
+        {
+          "position": 44,
+          "sentence_index": 9,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 45,
+          "sentence_index": 9,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 48,
+          "sentence_index": 10,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 49,
+          "sentence_index": 10,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 52,
+          "sentence_index": 11,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 53,
+          "sentence_index": 11,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 56,
+          "sentence_index": 12,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 57,
+          "sentence_index": 12,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 60,
+          "sentence_index": 13,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 61,
+          "sentence_index": 13,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 64,
+          "sentence_index": 14,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 65,
+          "sentence_index": 14,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 68,
+          "sentence_index": 15,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 69,
+          "sentence_index": 15,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 72,
+          "sentence_index": 16,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 73,
+          "sentence_index": 16,
+          "kind": "sentence_token"
+        }
+      ],
+      "sentence_rule": "tiny: fixed 4-token sentences over the generated part before the last token"
+    },
+    {
+      "id": "tiny_trace_01",
+      "category": "multi_hop",
+      "question": null,
+      "answer": null,
+      "token_ids": [
+        34,
+        53,
+        2,
+        34,
+        14,
+        34,
+        49,
+        48,
+        40,
+        13,
+        43,
+        10,
+        42,
+        53,
+        43,
+        10,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15,
+        13,
+        51,
+        15
+      ],
+      "n_prompt_tokens": 8,
+      "n_generated": 72,
+      "n_total_tokens": 80,
+      "text": null,
+      "ended_with_eos": true,
+      "answer_found": false,
+      "answer_position": 79,
+      "end_position": 79,
+      "think_start_index": 8,
+      "think_end_index": null,
+      "sentences": [
+        [
+          8,
+          12
+        ],
+        [
+          12,
+          16
+        ],
+        [
+          16,
+          20
+        ],
+        [
+          20,
+          24
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          28,
+          32
+        ],
+        [
+          32,
+          36
+        ],
+        [
+          36,
+          40
+        ],
+        [
+          40,
+          44
+        ],
+        [
+          44,
+          48
+        ],
+        [
+          48,
+          52
+        ],
+        [
+          52,
+          56
+        ],
+        [
+          56,
+          60
+        ],
+        [
+          60,
+          64
+        ],
+        [
+          64,
+          68
+        ],
+        [
+          68,
+          72
+        ],
+        [
+          72,
+          79
+        ]
+      ],
+      "n_sentences": 17,
+      "sampled_outputs": [
+        {
+          "position": 79,
+          "sentence_index": null,
+          "kind": "answer"
+        },
+        {
+          "position": 44,
+          "sentence_index": 9,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 45,
+          "sentence_index": 9,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 48,
+          "sentence_index": 10,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 49,
+          "sentence_index": 10,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 52,
+          "sentence_index": 11,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 53,
+          "sentence_index": 11,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 56,
+          "sentence_index": 12,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 57,
+          "sentence_index": 12,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 60,
+          "sentence_index": 13,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 61,
+          "sentence_index": 13,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 64,
+          "sentence_index": 14,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 65,
+          "sentence_index": 14,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 68,
+          "sentence_index": 15,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 69,
+          "sentence_index": 15,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 72,
+          "sentence_index": 16,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 73,
+          "sentence_index": 16,
+          "kind": "sentence_token"
+        }
+      ],
+      "sentence_rule": "tiny: fixed 4-token sentences over the generated part before the last token"
+    },
+    {
+      "id": "tiny_trace_02",
+      "category": "logic",
+      "question": null,
+      "answer": null,
+      "token_ids": [
+        15,
+        36,
+        43,
+        60,
+        58,
+        16,
+        59,
+        9,
+        29,
+        22,
+        2,
+        27,
+        43,
+        10,
+        15,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51,
+        15,
+        51
+      ],
+      "n_prompt_tokens": 12,
+      "n_generated": 72,
+      "n_total_tokens": 84,
+      "text": null,
+      "ended_with_eos": true,
+      "answer_found": false,
+      "answer_position": 83,
+      "end_position": 83,
+      "think_start_index": 12,
+      "think_end_index": null,
+      "sentences": [
+        [
+          12,
+          16
+        ],
+        [
+          16,
+          20
+        ],
+        [
+          20,
+          24
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          28,
+          32
+        ],
+        [
+          32,
+          36
+        ],
+        [
+          36,
+          40
+        ],
+        [
+          40,
+          44
+        ],
+        [
+          44,
+          48
+        ],
+        [
+          48,
+          52
+        ],
+        [
+          52,
+          56
+        ],
+        [
+          56,
+          60
+        ],
+        [
+          60,
+          64
+        ],
+        [
+          64,
+          68
+        ],
+        [
+          68,
+          72
+        ],
+        [
+          72,
+          76
+        ],
+        [
+          76,
+          83
+        ]
+      ],
+      "n_sentences": 17,
+      "sampled_outputs": [
+        {
+          "position": 83,
+          "sentence_index": null,
+          "kind": "answer"
+        },
+        {
+          "position": 48,
+          "sentence_index": 9,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 49,
+          "sentence_index": 9,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 52,
+          "sentence_index": 10,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 53,
+          "sentence_index": 10,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 56,
+          "sentence_index": 11,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 57,
+          "sentence_index": 11,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 60,
+          "sentence_index": 12,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 61,
+          "sentence_index": 12,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 64,
+          "sentence_index": 13,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 65,
+          "sentence_index": 13,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 68,
+          "sentence_index": 14,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 69,
+          "sentence_index": 14,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 72,
+          "sentence_index": 15,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 73,
+          "sentence_index": 15,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 76,
+          "sentence_index": 16,
+          "kind": "sentence_token"
+        },
+        {
+          "position": 77,
+          "sentence_index": 16,
+          "kind": "sentence_token"
+        }
+      ],
+      "sentence_rule": "tiny: fixed 4-token sentences over the generated part before the last token"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "tiny_trace_00",
+      "category": "arithmetic",
+      "n_generated": 72,
+      "ended_with_eos": true,
+      "answer_found": false
+    },
+    {
+      "id": "tiny_trace_01",
+      "category": "multi_hop",
+      "n_generated": 72,
+      "ended_with_eos": true,
+      "answer_found": false
+    },
+    {
+      "id": "tiny_trace_02",
+      "category": "logic",
+      "n_generated": 72,
+      "ended_with_eos": true,
+      "answer_found": false
+    }
+  ],
+  "selection": {
+    "arithmetic": "tiny",
+    "multi_hop": "tiny",
+    "logic": "tiny"
+  },
+  "generation": {
+    "greedy": true,
+    "max_new_tokens": 72,
+    "model": {
+      "transcoder": "plt",
+      "n_layers": 2,
+      "d_model": 16,
+      "n_heads": 2,
+      "d_head": 8,
+      "vocab": 64,
+      "d_mlp": 32,
+      "n_features": 16,
+      "active_fraction": 0.1,
+      "seed": 0
+    }
+  },
+  "selection_rule": "one trace per category in traces.categories: the first problem of the category in file order that ended with EOS and has n_generated in generated_tokens_range; else the first generated candidate of the category in fallback_generated_tokens_range",
+  "sentence_rule": {
+    "paper": "Thought Anchors: Which LLM Reasoning Steps Matter? (Bogdan, Macar, Nanda, Conmy 2025)",
+    "repository": "https://github.com/interp-reasoning/thought-anchors",
+    "url": "https://github.com/interp-reasoning/thought-anchors/blob/b53ed8c75d3f6112f68adfaec9a13d4d708c442e/utils.py",
+    "function": "split_solution_into_chunks",
+    "commit": "b53ed8c75d3f6112f68adfaec9a13d4d708c442e",
+    "checked": "2026-11-16",
+    "differences": [
+      "text after the last boundary is kept as a final chunk (Thought Anchors drops it)",
+      "inter-chunk whitespace is assigned to the following chunk so the spans tile the text"
+    ]
+  },
+  "packages": {
+    "python": "3.12.1",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "circuit_tracer": null,
+    "transformer_lens": null,
+    "nnsight": null,
+    "transformers": null,
+    "huggingface_hub": null,
+    "yaml": "6.0.3"
+  },
+  "run": {
+    "config": {
+      "traces": {
+        "problems_file": "configs/prompts/gate0_traces.json",
+        "traces_file": "results/gate0/traces.json",
+        "categories": [
+          "arithmetic",
+          "multi_hop",
+          "logic"
+        ],
+        "generated_tokens_range": [
+          200,
+          300
+        ],
+        "fallback_generated_tokens_range": [
+          150,
+          400
+        ],
+        "generation": {
+          "enable_thinking": true,
+          "do_sample": false,
+          "max_new_tokens": 512,
+          "dtype": "float32"
+        },
+        "sentences_per_trace": 8,
+        "tokens_per_sentence": 2
+      },
+      "model_set": "qwen3_4b_plt",
+      "tiny": true
+    },
+    "seed": 0,
+    "git": {
+      "hash": "f53f188a52f12d2704e08f9c7e93c4f0b84a1736",
+      "dirty": true
+    },
+    "packages": {
+      "python": "3.12.1",
+      "torch": "2.15.0+cpu",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "circuit_tracer": null,
+      "transformer_lens": null,
+      "nnsight": null,
+      "transformers": null,
+      "huggingface_hub": null,
+      "yaml": "6.0.3"
+    },
+    "gpu": "cpu (AMD64)",
+    "wall_seconds": 0.32435250002890825,
+    "utc": "2026-11-20T12:47:57+00:00"
+  }
+}

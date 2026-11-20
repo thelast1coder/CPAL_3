@@ -24,7 +24,7 @@ python -m venv .venv
 bash scripts/run_kill_test.sh --tiny                   # writes results/tiny/KILL_REPORT.md (TINY)
 ```
 
-## VM (RTX PRO 6000 96 GB, or H100): Gate 0, the first GPU job (PROJECT_V2 Section 7)
+## VM (RTX PRO 6000 96 GB, or H100): Gate 0 premise tests, the first GPU job (GATE0_PREMISES.md)
 Rent with a CUDA 12.8 (or newer) PyTorch image, at least 150 GB disk and 64 GB or more of system RAM.
 ```bash
 git clone https://github.com/thelast1coder/CPAL_3.git CCT_CPAL && cd CCT_CPAL
@@ -34,10 +34,12 @@ source .venv/bin/activate
 hf auth login                               # fresh read-only token; accept the Gemma-2 licence first
 for s in qwen3_1p7b_plt gemma2_2b_plt gemma2_2b_clt426k; do python scripts/download_models.py --set $s --dry-run; done
 tmux new -s gate0                           # survives a dropped SSH connection
-bash scripts/run_gate0.sh                   # downloads, 3 lanes in parallel, report; resumable
+bash scripts/run_premises.sh                # downloads, Stages A to F (parallel lanes), report; resumable
 ```
-Then read `results/gate0/GATE0_REPORT.md` and stop: Dawar decides GO-BIG, GO-STRUCTURE or NO-GO.
-Rehearsal on the laptop (minutes, numbers meaningless): `PY=.venv/Scripts/python bash scripts/run_gate0.sh --tiny`.
+Then read `results/gate0/PREMISE_REPORT.md` and stop: Dawar decides. Rent a host with PCIe 5 and at
+least 128 GB of system memory (circuit-tracer moves the whole edge matrix to the GPU at every
+influence update). Rehearsal on the laptop (numbers meaningless):
+`PY=.venv/Scripts/python bash scripts/run_premises.sh --tiny`.
 
 The v1 kill test (`scripts/run_kill_test.sh`, K0 to K3) runs after Gate 0 on the GO-BIG path.
 Every script supports `--config`, `--seed`, `--tiny`, `--force` and `--transcoders plt|clt|both`.

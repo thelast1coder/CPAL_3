@@ -1,0 +1,3915 @@
+{
+  "run": {
+    "config": {
+      "premise_B": {
+        "max_n_logits": 10,
+        "desired_logit_prob": 0.95,
+        "update_interval": 4,
+        "prune_cfg": {
+          "node_threshold": 0.8,
+          "edge_threshold": 0.98
+        },
+        "budget": 64,
+        "convergence_budget": 32,
+        "raised_budget": 128,
+        "convergence_jaccard": 0.95,
+        "batch_size_trace": 64,
+        "short_cap": 7500,
+        "batch_size_short": 256,
+        "n_sentences": 8,
+        "tokens_per_sentence": 2,
+        "faithfulness_outputs": 8,
+        "top_k": 10
+      },
+      "model_set": "qwen3_1p7b_plt",
+      "tiny": true,
+      "max_minutes": null
+    },
+    "seed": 0,
+    "git": {
+      "hash": "f53f188a52f12d2704e08f9c7e93c4f0b84a1736",
+      "dirty": true
+    },
+    "packages": {
+      "python": "3.12.1",
+      "torch": "2.15.0+cpu",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "circuit_tracer": null,
+      "transformer_lens": null,
+      "nnsight": null,
+      "transformers": null,
+      "huggingface_hub": null,
+      "yaml": "6.0.3"
+    },
+    "gpu": "cpu (AMD64)",
+    "wall_seconds": 19.7157418000279,
+    "utc": "2026-11-20T12:47:37+00:00"
+  },
+  "stage": "B",
+  "premises": {
+    "PR4": {
+      "status": "kill",
+      "values": {
+        "median_completeness_traces": 0.8085418112044516,
+        "median_completeness_short": 0.8366876538526737,
+        "median_replacement_traces": 0.5783701557238383,
+        "median_replacement_short": 0.6213728547047183,
+        "median_faithfulness_spearman_traces": 0.18181818181818182,
+        "median_faithfulness_spearman_short": 0.15151515151515152,
+        "median_faithfulness_spearman_total_traces": 0.18181818181818182,
+        "median_faithfulness_spearman_total_short": 0.15151515151515152,
+        "median_pruned_nodes_traces": 79.0,
+        "median_pruned_feature_nodes_traces": 2.0,
+        "median_pruned_edges_traces": 596.0,
+        "median_pruned_nodes_short": 27.0,
+        "median_pruned_edges_short": 159.0,
+        "n_trace_outputs": 51,
+        "n_trace_faithfulness_outputs": 8,
+        "n_short_prompts": 3,
+        "completeness_gap_vs_short": 0.028145842648222175,
+        "faithfulness_gap_vs_short": -0.030303030303030304,
+        "informative_graphs_too_big": false
+      },
+      "thresholds": {
+        "n_faithfulness_trace_outputs": 8,
+        "top_k_ablated_features": 10,
+        "pass": {
+          "median_completeness_traces_at_least": 0.7,
+          "completeness_gap_vs_short_at_most": 0.1,
+          "median_faithfulness_spearman_traces_at_least": 0.5,
+          "faithfulness_gap_vs_short_at_most": 0.15
+        },
+        "informative_median_pruned_nodes_above": 2000,
+        "kill": {
+          "median_completeness_below": 0.5,
+          "faithfulness_spearman_below": 0.2
+        },
+        "switch_model": {
+          "model_set": "qwen3_4b_plt",
+          "time_hours_at_most": 0.5
+        }
+      },
+      "notes": ""
+    }
+  },
+  "stop": true,
+  "stop_reason": "PR4 kill on Qwen3-1.7B: switch model before anything else (premise_B.py --model-set qwen3_4b_plt); stop rule B applies if Qwen3-4B also fails",
+  "gpu_seconds": 19.48210599971935,
+  "detail": {
+    "model_set": "qwen3_1p7b_plt",
+    "settings": {
+      "max_n_logits": 10,
+      "desired_logit_prob": 0.95,
+      "update_interval": 4,
+      "prune_cfg": {
+        "node_threshold": 0.8,
+        "edge_threshold": 0.98
+      },
+      "budget": 64,
+      "convergence_budget": 32,
+      "raised_budget": 128,
+      "convergence_jaccard": 0.95,
+      "batch_size_trace": 64,
+      "short_cap": 7500,
+      "batch_size_short": 256,
+      "n_sentences": 8,
+      "tokens_per_sentence": 2,
+      "faithfulness_outputs": 8,
+      "top_k": 10
+    },
+    "model_load_seconds": 0.013245699927210808,
+    "faithfulness_outputs": [
+      [
+        "tiny_trace_00",
+        79
+      ],
+      [
+        "tiny_trace_01",
+        79
+      ],
+      [
+        "tiny_trace_02",
+        83
+      ],
+      [
+        "tiny_trace_00",
+        52
+      ],
+      [
+        "tiny_trace_01",
+        52
+      ],
+      [
+        "tiny_trace_02",
+        64
+      ],
+      [
+        "tiny_trace_00",
+        68
+      ],
+      [
+        "tiny_trace_01",
+        68
+      ]
+    ],
+    "faithfulness_definition": "Spearman over the top-10 influence features between the measured change of sum_t p_t (logit_t - mean logit) when the feature is set to 0 (feature_intervention, freeze_attention=True) and the predicted change -sum_t p_t A[logit_t, f] (direct path; decision). spearman_total: direct + indirect paths through graph features (reported only)",
+    "graph_seconds": {
+      "median": 0.1563628000440076,
+      "total": 8.83334949973505
+    },
+    "peak_gb_max": 0.0,
+    "n_convergence_failures": 0,
+    "stopped_by_time": null,
+    "reference_index": "results/tiny/gate0/reference_graphs.json",
+    "trace_outputs": [
+      {
+        "T_D": 74,
+        "N": 301,
+        "n_active": 240,
+        "n_pos": 79,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 79,
+        "sentence_index": null,
+        "output_kind": "answer",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.22286179999355227,
+          "peak_gb": 0.0,
+          "n_active": 240
+        },
+        "graph_seconds": 0.22286179999355227,
+        "prefix_offset": 0,
+        "replacement_score": 0.6250175777296173,
+        "completeness_score": 0.8226168646407573,
+        "n_nodes_pruned": 94,
+        "n_feature_nodes_pruned": 1,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 692,
+        "n_features_graph": 64,
+        "n_errors": 158,
+        "n_tokens": 79,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              78,
+              7
+            ],
+            [
+              0,
+              76,
+              7
+            ],
+            [
+              0,
+              64,
+              7
+            ],
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              0,
+              1,
+              7
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              8,
+              15
+            ],
+            [
+              0,
+              7,
+              15
+            ],
+            [
+              0,
+              3,
+              4
+            ],
+            [
+              0,
+              65,
+              7
+            ]
+          ],
+          "feature_activation": [
+            2.1287667751312256,
+            2.115743398666382,
+            2.0984628200531006,
+            1.5554137229919434,
+            2.1482715606689453,
+            1.9316495656967163,
+            1.748189926147461,
+            1.560152292251587,
+            1.60519278049469,
+            1.7026541233062744
+          ],
+          "predicted_direct": [
+            0.10341669653885535,
+            0.0039652602618821305,
+            0.003284934854101319,
+            -0.00175208569998366,
+            0.0027783539030703415,
+            -0.001518590142211139,
+            -0.00021487615670061399,
+            0.00017205518891064419,
+            -0.0009507039559247093,
+            0.0013894007221876086
+          ],
+          "predicted_total": [
+            0.10341669653885535,
+            0.0039652602618821305,
+            0.003284934854101319,
+            -0.00175208569998366,
+            0.0027783539030703415,
+            -0.001518590142211139,
+            -0.00021487615670061399,
+            0.00017205518891064419,
+            -0.0009507039559247093,
+            0.0013894007221876086
+          ],
+          "measured": [
+            -0.022974241748740964,
+            0.0008263499054048662,
+            0.0008455709811331369,
+            -0.0034555440974854967,
+            0.0007249335587470318,
+            -0.001469745025104774,
+            0.0013403604515394019,
+            0.0015823864596867798,
+            -0.0004174745399350144,
+            0.0007150044376070808
+          ],
+          "metric_base": 0.6192939693366796,
+          "spearman_direct": 0.15151515151515152,
+          "spearman_total": 0.15151515151515152,
+          "seconds": 0.06517910002730787,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.5021446000318974,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/79.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 301,
+        "n_active": 328,
+        "n_pos": 79,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 79,
+        "sentence_index": null,
+        "output_kind": "answer",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.3125514999264851,
+          "peak_gb": 0.0,
+          "n_active": 328
+        },
+        "graph_seconds": 0.3125514999264851,
+        "prefix_offset": 0,
+        "replacement_score": 0.5464337940327216,
+        "completeness_score": 0.8021968519345243,
+        "n_nodes_pruned": 99,
+        "n_feature_nodes_pruned": 5,
+        "n_error_nodes_pruned": 5,
+        "n_edges_pruned": 872,
+        "n_features_graph": 64,
+        "n_errors": 158,
+        "n_tokens": 79,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              78,
+              3
+            ],
+            [
+              1,
+              78,
+              11
+            ],
+            [
+              0,
+              78,
+              7
+            ],
+            [
+              1,
+              78,
+              7
+            ],
+            [
+              1,
+              78,
+              1
+            ],
+            [
+              0,
+              14,
+              9
+            ],
+            [
+              0,
+              17,
+              9
+            ],
+            [
+              0,
+              10,
+              9
+            ],
+            [
+              0,
+              20,
+              9
+            ],
+            [
+              0,
+              4,
+              9
+            ]
+          ],
+          "feature_activation": [
+            2.2095463275909424,
+            1.802284598350525,
+            2.0161428451538086,
+            1.0593162775039673,
+            0.8332076668739319,
+            2.4700632095336914,
+            2.242156505584717,
+            2.398310422897339,
+            2.1547300815582275,
+            1.3438876867294312
+          ],
+          "predicted_direct": [
+            0.18903565840810155,
+            0.10091590719117649,
+            0.060442332976977736,
+            -0.017218678071848046,
+            -0.022730103961387346,
+            0.0034804122380883437,
+            0.0032651155998758468,
+            0.003086072399981767,
+            0.003035241201874322,
+            0.0029021442343846425
+          ],
+          "predicted_total": [
+            0.12736250226713905,
+            0.10091590719117649,
+            0.04014330155332889,
+            -0.017218678071848046,
+            -0.022730103961387346,
+            0.002615646372699288,
+            0.0024472578829722847,
+            0.002320256836772993,
+            0.0022737732530134216,
+            0.0021816430986704907
+          ],
+          "measured": [
+            -0.05190022660530513,
+            0.024388722535862772,
+            -0.09172542587061355,
+            -0.05614585197869437,
+            -0.028616686683049397,
+            -0.0005003362555656699,
+            0.0006835520101495796,
+            -0.000443710771922734,
+            0.0006626675949886751,
+            1.255401389210764e-05
+          ],
+          "metric_base": 0.5725975176495882,
+          "spearman_direct": 0.06666666666666667,
+          "spearman_total": 0.06666666666666667,
+          "seconds": 0.08299059991259128,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.560880999895744,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/79.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 313,
+        "n_active": 218,
+        "n_pos": 83,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 83,
+        "sentence_index": null,
+        "output_kind": "answer",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.21692719997372478,
+          "peak_gb": 0.0,
+          "n_active": 218
+        },
+        "graph_seconds": 0.21692719997372478,
+        "prefix_offset": 0,
+        "replacement_score": 0.5738017677018955,
+        "completeness_score": 0.8047501392744485,
+        "n_nodes_pruned": 101,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 761,
+        "n_features_graph": 64,
+        "n_errors": 166,
+        "n_tokens": 83,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              82,
+              14
+            ],
+            [
+              0,
+              82,
+              8
+            ],
+            [
+              0,
+              14,
+              8
+            ],
+            [
+              0,
+              5,
+              5
+            ],
+            [
+              0,
+              12,
+              5
+            ],
+            [
+              0,
+              80,
+              8
+            ],
+            [
+              0,
+              78,
+              8
+            ],
+            [
+              0,
+              76,
+              8
+            ],
+            [
+              0,
+              74,
+              8
+            ],
+            [
+              0,
+              72,
+              8
+            ]
+          ],
+          "feature_activation": [
+            1.6270053386688232,
+            1.9230353832244873,
+            2.1460354328155518,
+            0.9227254986763,
+            1.4884017705917358,
+            1.9220921993255615,
+            1.9210877418518066,
+            1.9200156927108765,
+            1.9188692569732666,
+            1.9176403284072876
+          ],
+          "predicted_direct": [
+            -0.05515946219643898,
+            0.06254526394077183,
+            0.0013855100555079823,
+            0.001349879968761298,
+            0.0011099918536376847,
+            0.0008934196715875032,
+            0.0008929033225661268,
+            0.0008923464582081414,
+            0.000891744430335078,
+            0.0008910917934239551
+          ],
+          "predicted_total": [
+            -0.05515946219643898,
+            0.06254526394077183,
+            0.0013855100555079823,
+            0.001349879968761298,
+            0.0011099918536376847,
+            0.0008934196715875032,
+            0.0008929033225661268,
+            0.0008923464582081414,
+            0.000891744430335078,
+            0.0008910917934239551
+          ],
+          "measured": [
+            -0.17252385481990784,
+            -0.004241261518408979,
+            -0.0022516605609183005,
+            -0.0005817598654980216,
+            -0.00012524384940870714,
+            -0.0014111728746647456,
+            -0.0014141516230233853,
+            -0.001417301055503084,
+            -0.0014206360287251085,
+            -0.0014241731370815414
+          ],
+          "metric_base": 0.7163683774886122,
+          "spearman_direct": 0.21212121212121213,
+          "spearman_total": 0.21212121212121213,
+          "seconds": 0.06395510002039373,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.4490232999669388,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/83.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 220,
+        "n_active": 156,
+        "n_pos": 52,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 52,
+        "sentence_index": 11,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.09923440008424222,
+          "peak_gb": 0.0,
+          "n_active": 156
+        },
+        "graph_seconds": 0.09923440008424222,
+        "prefix_offset": 0,
+        "replacement_score": 0.5372701012174396,
+        "completeness_score": 0.7974149291072077,
+        "n_nodes_pruned": 68,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 531,
+        "n_features_graph": 64,
+        "n_errors": 104,
+        "n_tokens": 52,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              51,
+              3
+            ],
+            [
+              1,
+              51,
+              11
+            ],
+            [
+              0,
+              51,
+              7
+            ],
+            [
+              0,
+              9,
+              8
+            ],
+            [
+              0,
+              9,
+              9
+            ],
+            [
+              0,
+              12,
+              8
+            ],
+            [
+              0,
+              11,
+              8
+            ],
+            [
+              0,
+              4,
+              8
+            ],
+            [
+              0,
+              13,
+              8
+            ],
+            [
+              0,
+              14,
+              8
+            ]
+          ],
+          "feature_activation": [
+            1.9800069332122803,
+            1.9299848079681396,
+            1.84147310256958,
+            1.6344119310379028,
+            1.2623255252838135,
+            1.652783989906311,
+            1.723746418952942,
+            2.2979283332824707,
+            1.597186803817749,
+            1.555202841758728
+          ],
+          "predicted_direct": [
+            0.15945831392510146,
+            0.14582933788930325,
+            0.09321246829314112,
+            0.0036675427637150367,
+            0.0038269215977579946,
+            0.0023640403748314263,
+            0.0022991218215498636,
+            0.0021532708278115386,
+            0.002310711740954277,
+            0.0022290519922597077
+          ],
+          "predicted_total": [
+            0.10307610195707509,
+            0.14582933788930325,
+            0.07844778001359867,
+            0.0022467066661254424,
+            0.0036733724597949797,
+            0.0011359996870025592,
+            0.00115005719358616,
+            0.0012242010358974498,
+            0.0010921876891688545,
+            0.0010466384639474834
+          ],
+          "measured": [
+            0.004137068487755635,
+            0.0722264205387787,
+            0.017563209057494422,
+            0.0004839174618801456,
+            -0.0008829744714727861,
+            -0.0004512903321253203,
+            -0.0003630554073809078,
+            3.1370204973679705e-06,
+            -0.00046629976961520825,
+            -0.00046078694487794447
+          ],
+          "metric_base": 0.5789136985653242,
+          "spearman_direct": 0.5272727272727272,
+          "spearman_total": 0.7212121212121212,
+          "seconds": 0.05636909999884665,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.3165201999945566,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/52.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 220,
+        "n_active": 214,
+        "n_pos": 52,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 52,
+        "sentence_index": 11,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.12386119994334877,
+          "peak_gb": 0.0,
+          "n_active": 214
+        },
+        "graph_seconds": 0.12386119994334877,
+        "prefix_offset": 0,
+        "replacement_score": 0.5923869124513284,
+        "completeness_score": 0.8206635169088233,
+        "n_nodes_pruned": 70,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 576,
+        "n_features_graph": 64,
+        "n_errors": 104,
+        "n_tokens": 52,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              51,
+              3
+            ],
+            [
+              0,
+              51,
+              7
+            ],
+            [
+              1,
+              51,
+              7
+            ],
+            [
+              1,
+              51,
+              1
+            ],
+            [
+              0,
+              14,
+              9
+            ],
+            [
+              0,
+              17,
+              9
+            ],
+            [
+              0,
+              10,
+              9
+            ],
+            [
+              0,
+              20,
+              9
+            ],
+            [
+              0,
+              4,
+              9
+            ],
+            [
+              0,
+              9,
+              9
+            ]
+          ],
+          "feature_activation": [
+            2.260859251022339,
+            2.029634952545166,
+            1.1655811071395874,
+            0.8638609647750854,
+            2.4700632095336914,
+            2.242156505584717,
+            2.398310422897339,
+            2.1547300815582275,
+            1.3438876867294312,
+            2.2024571895599365
+          ],
+          "predicted_direct": [
+            0.22488403954467118,
+            0.06382793642884527,
+            -0.02457111870880251,
+            -0.01748944858421797,
+            0.0037518116244920404,
+            0.0035663298099156086,
+            0.0033054461754699997,
+            0.0033255534770858224,
+            0.00314580290135473,
+            0.003207364768644097
+          ],
+          "predicted_total": [
+            0.21805730150899466,
+            0.056445029418914654,
+            -0.02457111870880251,
+            -0.01748944858421797,
+            0.002674097754199165,
+            0.00257404638534467,
+            0.0023517808308953086,
+            0.002405745552290971,
+            0.002240169399666448,
+            0.002309923608072197
+          ],
+          "measured": [
+            -0.10471490815421325,
+            -0.056818269048916625,
+            -0.07468372924571198,
+            -0.025719580602261094,
+            -0.001189354253865793,
+            -5.27102080962738e-05,
+            -0.0011421294807386628,
+            -9.67106016547259e-06,
+            -0.0010239821498104762,
+            -0.00020729946854869397
+          ],
+          "metric_base": 0.6674172001018066,
+          "spearman_direct": -0.11515151515151516,
+          "spearman_total": -0.11515151515151516,
+          "seconds": 0.06445039995014668,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.360902399988845,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/52.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 256,
+        "n_active": 180,
+        "n_pos": 64,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 64,
+        "sentence_index": 13,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.14207459997851402,
+          "peak_gb": 0.0,
+          "n_active": 180
+        },
+        "graph_seconds": 0.14207459997851402,
+        "prefix_offset": 0,
+        "replacement_score": 0.5564770979109339,
+        "completeness_score": 0.7992933949116665,
+        "n_nodes_pruned": 79,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 572,
+        "n_features_graph": 64,
+        "n_errors": 128,
+        "n_tokens": 64,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              63,
+              3
+            ],
+            [
+              0,
+              63,
+              7
+            ],
+            [
+              0,
+              12,
+              9
+            ],
+            [
+              0,
+              13,
+              13
+            ],
+            [
+              0,
+              10,
+              5
+            ],
+            [
+              0,
+              2,
+              8
+            ],
+            [
+              0,
+              4,
+              2
+            ],
+            [
+              0,
+              11,
+              9
+            ],
+            [
+              0,
+              14,
+              8
+            ],
+            [
+              0,
+              61,
+              7
+            ]
+          ],
+          "feature_activation": [
+            1.958268404006958,
+            2.152669668197632,
+            1.779310703277588,
+            1.8836435079574585,
+            1.2689886093139648,
+            1.5871388912200928,
+            2.52919340133667,
+            2.147761106491089,
+            2.1460354328155518,
+            2.155552387237549
+          ],
+          "predicted_direct": [
+            0.14887203935879118,
+            0.09688365659226789,
+            0.003554812297347833,
+            0.0020863839805627875,
+            0.0016022319095068819,
+            0.001827971434375429,
+            -0.0013078373809408419,
+            0.001649342083850181,
+            0.0014719931890890257,
+            -0.00029691096397343645
+          ],
+          "predicted_total": [
+            0.14887203935879118,
+            0.09688365659226789,
+            0.003554812297347833,
+            0.0020863839805627875,
+            0.0016022319095068819,
+            0.001827971434375429,
+            -0.0013078373809408419,
+            0.001649342083850181,
+            0.0014719931890890257,
+            -0.00029691096397343645
+          ],
+          "measured": [
+            -0.11389680993368123,
+            -0.01654201458800486,
+            0.0005209010463816943,
+            0.0010745570419432582,
+            0.00019579295318505885,
+            0.00024256269253619678,
+            3.5895394906004796e-05,
+            -0.000100298283644773,
+            0.00021843670450705233,
+            -0.0004022135050746334
+          ],
+          "metric_base": 0.6299866338807913,
+          "spearman_direct": -0.10303030303030303,
+          "spearman_total": -0.10303030303030303,
+          "seconds": 0.07022160000633448,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.38374890002887696,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/64.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 268,
+        "n_active": 204,
+        "n_pos": 68,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 68,
+        "sentence_index": 15,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.16205369995441288,
+          "peak_gb": 0.0,
+          "n_active": 204
+        },
+        "graph_seconds": 0.16205369995441288,
+        "prefix_offset": 0,
+        "replacement_score": 0.5628074915984544,
+        "completeness_score": 0.8033257976890229,
+        "n_nodes_pruned": 86,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 645,
+        "n_features_graph": 64,
+        "n_errors": 136,
+        "n_tokens": 68,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              1,
+              67,
+              9
+            ],
+            [
+              1,
+              67,
+              5
+            ],
+            [
+              0,
+              65,
+              7
+            ],
+            [
+              0,
+              65,
+              3
+            ],
+            [
+              0,
+              64,
+              7
+            ],
+            [
+              0,
+              1,
+              7
+            ],
+            [
+              0,
+              28,
+              8
+            ],
+            [
+              0,
+              30,
+              8
+            ],
+            [
+              0,
+              32,
+              8
+            ],
+            [
+              0,
+              34,
+              8
+            ]
+          ],
+          "feature_activation": [
+            2.7503113746643066,
+            1.1413737535476685,
+            1.7026541233062744,
+            1.6188710927963257,
+            2.0984628200531006,
+            2.1482715606689453,
+            1.7625892162322998,
+            1.785033941268921,
+            1.8030214309692383,
+            1.817713975906372
+          ],
+          "predicted_direct": [
+            0.22031280083830856,
+            -0.01584305555728415,
+            -0.0037036333232026057,
+            0.00450303205511419,
+            -0.0022278135892377046,
+            -0.0019463161999744814,
+            -0.00018543703684449186,
+            -0.0001924307381543604,
+            -0.00019752632977391874,
+            -0.00020129304276839816
+          ],
+          "predicted_total": [
+            0.22031280083830856,
+            -0.01584305555728415,
+            -0.001595190267309119,
+            0.003758751619572743,
+            -0.0009950383207946564,
+            -0.0008854452981901077,
+            0.0007638108418394139,
+            0.0007589092506482897,
+            0.000753826112020528,
+            0.0007487910788940723
+          ],
+          "measured": [
+            0.041301377291228625,
+            -0.04207801059298277,
+            -0.001583300019308287,
+            -0.0006347300304213599,
+            -0.0002973720922685441,
+            -0.0008885741080837395,
+            -0.0032291284599227366,
+            -0.002907941520233992,
+            -0.002650007191328241,
+            -0.002439523118837994
+          ],
+          "metric_base": 0.7339794855949733,
+          "spearman_direct": 0.28484848484848485,
+          "spearman_total": 0.28484848484848485,
+          "seconds": 0.061736400006338954,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.382622699951753,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/68.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 268,
+        "n_active": 281,
+        "n_pos": 68,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 68,
+        "sentence_index": 15,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.38677329989150167,
+          "peak_gb": 0.0,
+          "n_active": 281
+        },
+        "graph_seconds": 0.38677329989150167,
+        "prefix_offset": 0,
+        "replacement_score": 0.5713103270206102,
+        "completeness_score": 0.8118443162181093,
+        "n_nodes_pruned": 102,
+        "n_feature_nodes_pruned": 6,
+        "n_error_nodes_pruned": 18,
+        "n_edges_pruned": 982,
+        "n_features_graph": 64,
+        "n_errors": 136,
+        "n_tokens": 68,
+        "n_logits": 10,
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              67,
+              14
+            ],
+            [
+              0,
+              67,
+              8
+            ],
+            [
+              1,
+              67,
+              8
+            ],
+            [
+              1,
+              67,
+              1
+            ],
+            [
+              1,
+              67,
+              7
+            ],
+            [
+              1,
+              67,
+              4
+            ],
+            [
+              0,
+              3,
+              12
+            ],
+            [
+              0,
+              64,
+              8
+            ],
+            [
+              0,
+              61,
+              8
+            ],
+            [
+              0,
+              58,
+              8
+            ]
+          ],
+          "feature_activation": [
+            1.5974808931350708,
+            1.8145184516906738,
+            1.5169694423675537,
+            1.0854560136795044,
+            1.0962556600570679,
+            0.3670758605003357,
+            2.3902339935302734,
+            1.811268925666809,
+            1.8076492547988892,
+            1.8035935163497925
+          ],
+          "predicted_direct": [
+            -0.06633626101444415,
+            0.0523195094556497,
+            -0.08246207943099591,
+            -0.038984492557708174,
+            -0.0022920123094498437,
+            0.009662827222378156,
+            0.004382624866319693,
+            0.0014154438301992082,
+            0.001416055115323972,
+            0.0014166183350291925
+          ],
+          "predicted_total": [
+            -0.05305932198718087,
+            0.031752195923844304,
+            -0.08246207943099591,
+            -0.038984492557708174,
+            -0.0022920123094498437,
+            0.009662827222378156,
+            0.003010281444481043,
+            0.001568179746231072,
+            0.0015676740226047853,
+            0.0015670067960988692
+          ],
+          "measured": [
+            -0.12538994191100972,
+            -0.009872268231761017,
+            -0.06753324094317603,
+            -0.04035991037870035,
+            -0.08899795571132951,
+            -0.01175276578004314,
+            0.0004606798484280139,
+            -0.004799390438630979,
+            -0.004834609694481018,
+            -0.004872741287592519
+          ],
+          "metric_base": 0.9025933556532088,
+          "spearman_direct": 0.6,
+          "spearman_total": 0.6484848484848484,
+          "seconds": 0.053307099966332316,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "faithfulness_selected": true,
+        "gpu_seconds": 0.6465671999612823,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/68.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 196,
+        "n_active": 132,
+        "n_pos": 44,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 44,
+        "sentence_index": 9,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.09839350008405745,
+          "peak_gb": 0.0,
+          "n_active": 132
+        },
+        "graph_seconds": 0.09839350008405745,
+        "prefix_offset": 0,
+        "replacement_score": 0.5537718391793784,
+        "completeness_score": 0.8070720395517557,
+        "n_nodes_pruned": 61,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 497,
+        "n_features_graph": 64,
+        "n_errors": 88,
+        "n_tokens": 44,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.26247489999514073,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/44.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 196,
+        "n_active": 184,
+        "n_pos": 44,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 44,
+        "sentence_index": 9,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.09773040004074574,
+          "peak_gb": 0.0,
+          "n_active": 184
+        },
+        "graph_seconds": 0.09773040004074574,
+        "prefix_offset": 0,
+        "replacement_score": 0.5995219310186978,
+        "completeness_score": 0.8243982845044532,
+        "n_nodes_pruned": 70,
+        "n_feature_nodes_pruned": 6,
+        "n_error_nodes_pruned": 10,
+        "n_edges_pruned": 639,
+        "n_features_graph": 64,
+        "n_errors": 88,
+        "n_tokens": 44,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2716948000015691,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/44.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 208,
+        "n_active": 148,
+        "n_pos": 48,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 48,
+        "sentence_index": 9,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.07931460009422153,
+          "peak_gb": 0.0,
+          "n_active": 148
+        },
+        "graph_seconds": 0.07931460009422153,
+        "prefix_offset": 0,
+        "replacement_score": 0.561717228172672,
+        "completeness_score": 0.8021150103233847,
+        "n_nodes_pruned": 62,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 2,
+        "n_edges_pruned": 439,
+        "n_features_graph": 64,
+        "n_errors": 96,
+        "n_tokens": 48,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2814922999823466,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/48.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 199,
+        "n_active": 134,
+        "n_pos": 45,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 45,
+        "sentence_index": 9,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.17655799991916865,
+          "peak_gb": 0.0,
+          "n_active": 134
+        },
+        "graph_seconds": 0.17655799991916865,
+        "prefix_offset": 0,
+        "replacement_score": 0.5825228756756864,
+        "completeness_score": 0.8101557170640997,
+        "n_nodes_pruned": 60,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 424,
+        "n_features_graph": 64,
+        "n_errors": 90,
+        "n_tokens": 45,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.34856380010023713,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/45.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 199,
+        "n_active": 186,
+        "n_pos": 45,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 45,
+        "sentence_index": 9,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.09878500003833324,
+          "peak_gb": 0.0,
+          "n_active": 186
+        },
+        "graph_seconds": 0.09878500003833324,
+        "prefix_offset": 0,
+        "replacement_score": 0.6443839611818576,
+        "completeness_score": 0.8398375527920652,
+        "n_nodes_pruned": 60,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 412,
+        "n_features_graph": 64,
+        "n_errors": 90,
+        "n_tokens": 45,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2764254999347031,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/45.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 211,
+        "n_active": 150,
+        "n_pos": 49,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 49,
+        "sentence_index": 9,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.08902349998243153,
+          "peak_gb": 0.0,
+          "n_active": 150
+        },
+        "graph_seconds": 0.08902349998243153,
+        "prefix_offset": 0,
+        "replacement_score": 0.5854032843389096,
+        "completeness_score": 0.8113208006883712,
+        "n_nodes_pruned": 67,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 495,
+        "n_features_graph": 64,
+        "n_errors": 98,
+        "n_tokens": 49,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2575866000261158,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/49.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 208,
+        "n_active": 144,
+        "n_pos": 48,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 48,
+        "sentence_index": 10,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.1151016999501735,
+          "peak_gb": 0.0,
+          "n_active": 144
+        },
+        "graph_seconds": 0.1151016999501735,
+        "prefix_offset": 0,
+        "replacement_score": 0.5413905475759621,
+        "completeness_score": 0.799347631871412,
+        "n_nodes_pruned": 64,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 495,
+        "n_features_graph": 64,
+        "n_errors": 96,
+        "n_tokens": 48,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2789310000371188,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/48.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 208,
+        "n_active": 198,
+        "n_pos": 48,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 48,
+        "sentence_index": 10,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.19432040001265705,
+          "peak_gb": 0.0,
+          "n_active": 198
+        },
+        "graph_seconds": 0.19432040001265705,
+        "prefix_offset": 0,
+        "replacement_score": 0.6415374469646368,
+        "completeness_score": 0.8384248702648286,
+        "n_nodes_pruned": 63,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 432,
+        "n_features_graph": 64,
+        "n_errors": 96,
+        "n_tokens": 48,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.36495219997595996,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/48.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 220,
+        "n_active": 156,
+        "n_pos": 52,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 52,
+        "sentence_index": 10,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.10493520007003099,
+          "peak_gb": 0.0,
+          "n_active": 156
+        },
+        "graph_seconds": 0.10493520007003099,
+        "prefix_offset": 0,
+        "replacement_score": 0.5603877849328213,
+        "completeness_score": 0.8014316089857523,
+        "n_nodes_pruned": 66,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 2,
+        "n_edges_pruned": 470,
+        "n_features_graph": 64,
+        "n_errors": 104,
+        "n_tokens": 52,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2601018000859767,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/52.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 211,
+        "n_active": 147,
+        "n_pos": 49,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 49,
+        "sentence_index": 10,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.10172399994917214,
+          "peak_gb": 0.0,
+          "n_active": 147
+        },
+        "graph_seconds": 0.10172399994917214,
+        "prefix_offset": 0,
+        "replacement_score": 0.5776079105661277,
+        "completeness_score": 0.8079162372487847,
+        "n_nodes_pruned": 64,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 456,
+        "n_features_graph": 64,
+        "n_errors": 98,
+        "n_tokens": 49,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2642575999489054,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/49.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 211,
+        "n_active": 202,
+        "n_pos": 49,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 49,
+        "sentence_index": 10,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.13540999998804182,
+          "peak_gb": 0.0,
+          "n_active": 202
+        },
+        "graph_seconds": 0.13540999998804182,
+        "prefix_offset": 0,
+        "replacement_score": 0.5946497206680236,
+        "completeness_score": 0.8217998821746886,
+        "n_nodes_pruned": 67,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 548,
+        "n_features_graph": 64,
+        "n_errors": 98,
+        "n_tokens": 49,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2930034000892192,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/49.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 223,
+        "n_active": 158,
+        "n_pos": 53,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 53,
+        "sentence_index": 10,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.11147620005067438,
+          "peak_gb": 0.0,
+          "n_active": 158
+        },
+        "graph_seconds": 0.11147620005067438,
+        "prefix_offset": 0,
+        "replacement_score": 0.5822759028319772,
+        "completeness_score": 0.809665735145066,
+        "n_nodes_pruned": 71,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 530,
+        "n_features_graph": 64,
+        "n_errors": 106,
+        "n_tokens": 53,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3176693000132218,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/53.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 223,
+        "n_active": 159,
+        "n_pos": 53,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 53,
+        "sentence_index": 11,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.09413799992762506,
+          "peak_gb": 0.0,
+          "n_active": 159
+        },
+        "graph_seconds": 0.09413799992762506,
+        "prefix_offset": 0,
+        "replacement_score": 0.5735607883040522,
+        "completeness_score": 0.8059333897192892,
+        "n_nodes_pruned": 68,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 489,
+        "n_features_graph": 64,
+        "n_errors": 106,
+        "n_tokens": 53,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2372779999859631,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/53.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 223,
+        "n_active": 220,
+        "n_pos": 53,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 53,
+        "sentence_index": 11,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.15390919998753816,
+          "peak_gb": 0.0,
+          "n_active": 220
+        },
+        "graph_seconds": 0.15390919998753816,
+        "prefix_offset": 0,
+        "replacement_score": 0.5818387993600008,
+        "completeness_score": 0.8167606068222005,
+        "n_nodes_pruned": 82,
+        "n_feature_nodes_pruned": 6,
+        "n_error_nodes_pruned": 13,
+        "n_edges_pruned": 765,
+        "n_features_graph": 64,
+        "n_errors": 106,
+        "n_tokens": 53,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3402819000184536,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/53.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 232,
+        "n_active": 164,
+        "n_pos": 56,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 56,
+        "sentence_index": 11,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.15541479992680252,
+          "peak_gb": 0.0,
+          "n_active": 164
+        },
+        "graph_seconds": 0.15541479992680252,
+        "prefix_offset": 0,
+        "replacement_score": 0.5591195776281298,
+        "completeness_score": 0.800753774253614,
+        "n_nodes_pruned": 70,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 2,
+        "n_edges_pruned": 500,
+        "n_features_graph": 64,
+        "n_errors": 112,
+        "n_tokens": 56,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.32470680004917085,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/56.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 232,
+        "n_active": 168,
+        "n_pos": 56,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 56,
+        "sentence_index": 12,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.09813060006126761,
+          "peak_gb": 0.0,
+          "n_active": 168
+        },
+        "graph_seconds": 0.09813060006126761,
+        "prefix_offset": 0,
+        "replacement_score": 0.5415944733473136,
+        "completeness_score": 0.7988246626321917,
+        "n_nodes_pruned": 72,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 557,
+        "n_features_graph": 64,
+        "n_errors": 112,
+        "n_tokens": 56,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2571076999884099,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/56.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 232,
+        "n_active": 232,
+        "n_pos": 56,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 56,
+        "sentence_index": 12,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.1464760999660939,
+          "peak_gb": 0.0,
+          "n_active": 232
+        },
+        "graph_seconds": 0.1464760999660939,
+        "prefix_offset": 0,
+        "replacement_score": 0.579434072302769,
+        "completeness_score": 0.8156606956017874,
+        "n_nodes_pruned": 86,
+        "n_feature_nodes_pruned": 6,
+        "n_error_nodes_pruned": 14,
+        "n_edges_pruned": 809,
+        "n_features_graph": 64,
+        "n_errors": 112,
+        "n_tokens": 56,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3004405000247061,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/56.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 235,
+        "n_active": 166,
+        "n_pos": 57,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 57,
+        "sentence_index": 11,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.10564960003830492,
+          "peak_gb": 0.0,
+          "n_active": 166
+        },
+        "graph_seconds": 0.10564960003830492,
+        "prefix_offset": 0,
+        "replacement_score": 0.579437170536274,
+        "completeness_score": 0.8081673643785368,
+        "n_nodes_pruned": 75,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 563,
+        "n_features_graph": 64,
+        "n_errors": 114,
+        "n_tokens": 57,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.26936169993132353,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/57.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 235,
+        "n_active": 171,
+        "n_pos": 57,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 57,
+        "sentence_index": 12,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.11893320002127439,
+          "peak_gb": 0.0,
+          "n_active": 171
+        },
+        "graph_seconds": 0.11893320002127439,
+        "prefix_offset": 0,
+        "replacement_score": 0.5696060025378994,
+        "completeness_score": 0.8039429647596011,
+        "n_nodes_pruned": 73,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 543,
+        "n_features_graph": 64,
+        "n_errors": 114,
+        "n_tokens": 57,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2841292000375688,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/57.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 235,
+        "n_active": 234,
+        "n_pos": 57,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 57,
+        "sentence_index": 12,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.18139510008040816,
+          "peak_gb": 0.0,
+          "n_active": 234
+        },
+        "graph_seconds": 0.18139510008040816,
+        "prefix_offset": 0,
+        "replacement_score": 0.6334193315323435,
+        "completeness_score": 0.8345055251109182,
+        "n_nodes_pruned": 72,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 483,
+        "n_features_graph": 64,
+        "n_errors": 114,
+        "n_tokens": 57,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.347534199943766,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/57.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 244,
+        "n_active": 172,
+        "n_pos": 60,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 60,
+        "sentence_index": 12,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.11845020006876439,
+          "peak_gb": 0.0,
+          "n_active": 172
+        },
+        "graph_seconds": 0.11845020006876439,
+        "prefix_offset": 0,
+        "replacement_score": 0.5578042027909345,
+        "completeness_score": 0.8000292373536932,
+        "n_nodes_pruned": 75,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 540,
+        "n_features_graph": 64,
+        "n_errors": 120,
+        "n_tokens": 60,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.28124079992994666,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/60.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 244,
+        "n_active": 180,
+        "n_pos": 60,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 60,
+        "sentence_index": 13,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.12613270001020283,
+          "peak_gb": 0.0,
+          "n_active": 180
+        },
+        "graph_seconds": 0.12613270001020283,
+        "prefix_offset": 0,
+        "replacement_score": 0.5386451418832171,
+        "completeness_score": 0.7973904430681072,
+        "n_nodes_pruned": 76,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 591,
+        "n_features_graph": 64,
+        "n_errors": 120,
+        "n_tokens": 60,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3075286999810487,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/60.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 244,
+        "n_active": 246,
+        "n_pos": 60,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 60,
+        "sentence_index": 13,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.20468700001947582,
+          "peak_gb": 0.0,
+          "n_active": 246
+        },
+        "graph_seconds": 0.20468700001947582,
+        "prefix_offset": 0,
+        "replacement_score": 0.63138034171922,
+        "completeness_score": 0.8334676019193186,
+        "n_nodes_pruned": 75,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 506,
+        "n_features_graph": 64,
+        "n_errors": 120,
+        "n_tokens": 60,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.36306680005509406,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/60.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 247,
+        "n_active": 174,
+        "n_pos": 61,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 61,
+        "sentence_index": 12,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.1563628000440076,
+          "peak_gb": 0.0,
+          "n_active": 174
+        },
+        "graph_seconds": 0.1563628000440076,
+        "prefix_offset": 0,
+        "replacement_score": 0.5766568467143965,
+        "completeness_score": 0.8066972579953049,
+        "n_nodes_pruned": 79,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 596,
+        "n_features_graph": 64,
+        "n_errors": 122,
+        "n_tokens": 61,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.32526950002647936,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/61.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 247,
+        "n_active": 183,
+        "n_pos": 61,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 61,
+        "sentence_index": 13,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.14571539999451488,
+          "peak_gb": 0.0,
+          "n_active": 183
+        },
+        "graph_seconds": 0.14571539999451488,
+        "prefix_offset": 0,
+        "replacement_score": 0.5660779353065484,
+        "completeness_score": 0.8025599234497899,
+        "n_nodes_pruned": 78,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 567,
+        "n_features_graph": 64,
+        "n_errors": 122,
+        "n_tokens": 61,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.32298830000218004,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/61.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 247,
+        "n_active": 250,
+        "n_pos": 61,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 61,
+        "sentence_index": 13,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.18134749995078892,
+          "peak_gb": 0.0,
+          "n_active": 250
+        },
+        "graph_seconds": 0.18134749995078892,
+        "prefix_offset": 0,
+        "replacement_score": 0.580077773655592,
+        "completeness_score": 0.8150373245798855,
+        "n_nodes_pruned": 80,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 5,
+        "n_edges_pruned": 648,
+        "n_features_graph": 64,
+        "n_errors": 122,
+        "n_tokens": 61,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.32430189999286085,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/61.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 259,
+        "n_active": 182,
+        "n_pos": 65,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 65,
+        "sentence_index": 13,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.1226330999052152,
+          "peak_gb": 0.0,
+          "n_active": 182
+        },
+        "graph_seconds": 0.1226330999052152,
+        "prefix_offset": 0,
+        "replacement_score": 0.5830489463137084,
+        "completeness_score": 0.8098217171716544,
+        "n_nodes_pruned": 83,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 616,
+        "n_features_graph": 64,
+        "n_errors": 130,
+        "n_tokens": 65,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.2831935998983681,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/65.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 256,
+        "n_active": 192,
+        "n_pos": 64,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 64,
+        "sentence_index": 14,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.149960600072518,
+          "peak_gb": 0.0,
+          "n_active": 192
+        },
+        "graph_seconds": 0.149960600072518,
+        "prefix_offset": 0,
+        "replacement_score": 0.5909625268197014,
+        "completeness_score": 0.8202239879910197,
+        "n_nodes_pruned": 79,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 2,
+        "n_edges_pruned": 633,
+        "n_features_graph": 64,
+        "n_errors": 128,
+        "n_tokens": 64,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3218516999622807,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/64.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 256,
+        "n_active": 262,
+        "n_pos": 64,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 64,
+        "sentence_index": 14,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.2679800000041723,
+          "peak_gb": 0.0,
+          "n_active": 262
+        },
+        "graph_seconds": 0.2679800000041723,
+        "prefix_offset": 0,
+        "replacement_score": 0.5783701557238383,
+        "completeness_score": 0.8141570095835222,
+        "n_nodes_pruned": 83,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 5,
+        "n_edges_pruned": 674,
+        "n_features_graph": 64,
+        "n_errors": 128,
+        "n_tokens": 64,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.4253648000303656,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/64.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 268,
+        "n_active": 188,
+        "n_pos": 68,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 68,
+        "sentence_index": 14,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.2232366999378428,
+          "peak_gb": 0.0,
+          "n_active": 188
+        },
+        "graph_seconds": 0.2232366999378428,
+        "prefix_offset": 0,
+        "replacement_score": 0.5552130141117657,
+        "completeness_score": 0.7985884634711932,
+        "n_nodes_pruned": 84,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 610,
+        "n_features_graph": 64,
+        "n_errors": 136,
+        "n_tokens": 68,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.39200310001615435,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/68.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 259,
+        "n_active": 194,
+        "n_pos": 65,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 65,
+        "sentence_index": 14,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.18029129994101822,
+          "peak_gb": 0.0,
+          "n_active": 194
+        },
+        "graph_seconds": 0.18029129994101822,
+        "prefix_offset": 0,
+        "replacement_score": 0.6419705846783837,
+        "completeness_score": 0.8348864660799908,
+        "n_nodes_pruned": 80,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 635,
+        "n_features_graph": 64,
+        "n_errors": 130,
+        "n_tokens": 65,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3706268999958411,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/65.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 259,
+        "n_active": 268,
+        "n_pos": 65,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 65,
+        "sentence_index": 14,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.2637484000297263,
+          "peak_gb": 0.0,
+          "n_active": 268
+        },
+        "graph_seconds": 0.2637484000297263,
+        "prefix_offset": 0,
+        "replacement_score": 0.5732030709883664,
+        "completeness_score": 0.8127459083732224,
+        "n_nodes_pruned": 98,
+        "n_feature_nodes_pruned": 6,
+        "n_error_nodes_pruned": 17,
+        "n_edges_pruned": 939,
+        "n_features_graph": 64,
+        "n_errors": 130,
+        "n_tokens": 65,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.51332370005548,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/65.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 271,
+        "n_active": 190,
+        "n_pos": 69,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 69,
+        "sentence_index": 14,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.18632719991728663,
+          "peak_gb": 0.0,
+          "n_active": 190
+        },
+        "graph_seconds": 0.18632719991728663,
+        "prefix_offset": 0,
+        "replacement_score": 0.5806995856530962,
+        "completeness_score": 0.8085418112044516,
+        "n_nodes_pruned": 87,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 649,
+        "n_features_graph": 64,
+        "n_errors": 138,
+        "n_tokens": 69,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.35508439992554486,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/69.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 271,
+        "n_active": 208,
+        "n_pos": 69,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 69,
+        "sentence_index": 15,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.20741070003714412,
+          "peak_gb": 0.0,
+          "n_active": 208
+        },
+        "graph_seconds": 0.20741070003714412,
+        "prefix_offset": 0,
+        "replacement_score": 0.6427260715348126,
+        "completeness_score": 0.8415161324027461,
+        "n_nodes_pruned": 86,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 716,
+        "n_features_graph": 64,
+        "n_errors": 138,
+        "n_tokens": 69,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.33945879992097616,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/69.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 271,
+        "n_active": 283,
+        "n_pos": 69,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 69,
+        "sentence_index": 15,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.2787153999088332,
+          "peak_gb": 0.0,
+          "n_active": 283
+        },
+        "graph_seconds": 0.2787153999088332,
+        "prefix_offset": 0,
+        "replacement_score": 0.626144497137515,
+        "completeness_score": 0.8307910009832673,
+        "n_nodes_pruned": 84,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 577,
+        "n_features_graph": 64,
+        "n_errors": 138,
+        "n_tokens": 69,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.4473196000326425,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/69.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 280,
+        "n_active": 196,
+        "n_pos": 72,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 72,
+        "sentence_index": 15,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.22213710006326437,
+          "peak_gb": 0.0,
+          "n_active": 196
+        },
+        "graph_seconds": 0.22213710006326437,
+        "prefix_offset": 0,
+        "replacement_score": 0.554028667298975,
+        "completeness_score": 0.7979224153102032,
+        "n_nodes_pruned": 88,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 642,
+        "n_features_graph": 64,
+        "n_errors": 144,
+        "n_tokens": 72,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.3950350999366492,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/72.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 280,
+        "n_active": 220,
+        "n_pos": 72,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 72,
+        "sentence_index": 16,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.1946728000184521,
+          "peak_gb": 0.0,
+          "n_active": 220
+        },
+        "graph_seconds": 0.1946728000184521,
+        "prefix_offset": 0,
+        "replacement_score": 0.6542732407744846,
+        "completeness_score": 0.8452072745235153,
+        "n_nodes_pruned": 101,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 15,
+        "n_edges_pruned": 908,
+        "n_features_graph": 64,
+        "n_errors": 144,
+        "n_tokens": 72,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.35627740004565567,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/72.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 280,
+        "n_active": 296,
+        "n_pos": 72,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 72,
+        "sentence_index": 16,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.2663773999083787,
+          "peak_gb": 0.0,
+          "n_active": 296
+        },
+        "graph_seconds": 0.2663773999083787,
+        "prefix_offset": 0,
+        "replacement_score": 0.6246457540991813,
+        "completeness_score": 0.8300234563883996,
+        "n_nodes_pruned": 87,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 601,
+        "n_features_graph": 64,
+        "n_errors": 144,
+        "n_tokens": 72,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.4337137999245897,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/72.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 283,
+        "n_active": 198,
+        "n_pos": 73,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 73,
+        "sentence_index": 15,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.17854990006890148,
+          "peak_gb": 0.0,
+          "n_active": 198
+        },
+        "graph_seconds": 0.17854990006890148,
+        "prefix_offset": 0,
+        "replacement_score": 0.5785205287907699,
+        "completeness_score": 0.8073446460934373,
+        "n_nodes_pruned": 91,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 681,
+        "n_features_graph": 64,
+        "n_errors": 146,
+        "n_tokens": 73,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.34251089999452233,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/73.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 283,
+        "n_active": 224,
+        "n_pos": 73,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_00",
+        "position": 73,
+        "sentence_index": 16,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.24230959999840707,
+          "peak_gb": 0.0,
+          "n_active": 224
+        },
+        "graph_seconds": 0.24230959999840707,
+        "prefix_offset": 0,
+        "replacement_score": 0.6385184363602038,
+        "completeness_score": 0.8383885391349234,
+        "n_nodes_pruned": 90,
+        "n_feature_nodes_pruned": 4,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 742,
+        "n_features_graph": 64,
+        "n_errors": 146,
+        "n_tokens": 73,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.42418470000848174,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_00/73.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 283,
+        "n_active": 301,
+        "n_pos": 73,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_01",
+        "position": 73,
+        "sentence_index": 16,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.3335286999354139,
+          "peak_gb": 0.0,
+          "n_active": 301
+        },
+        "graph_seconds": 0.3335286999354139,
+        "prefix_offset": 0,
+        "replacement_score": 0.5500338855555069,
+        "completeness_score": 0.8039590730888476,
+        "n_nodes_pruned": 93,
+        "n_feature_nodes_pruned": 5,
+        "n_error_nodes_pruned": 5,
+        "n_edges_pruned": 816,
+        "n_features_graph": 64,
+        "n_errors": 146,
+        "n_tokens": 73,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.5207592999795452,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_01/73.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 292,
+        "n_active": 204,
+        "n_pos": 76,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 76,
+        "sentence_index": 16,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.2185145999537781,
+          "peak_gb": 0.0,
+          "n_active": 204
+        },
+        "graph_seconds": 0.2185145999537781,
+        "prefix_offset": 0,
+        "replacement_score": 0.5529134482066123,
+        "completeness_score": 0.7972960997589866,
+        "n_nodes_pruned": 92,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 674,
+        "n_features_graph": 64,
+        "n_errors": 152,
+        "n_tokens": 76,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.38705539994407445,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/76.pt"
+      },
+      {
+        "T_D": 74,
+        "N": 295,
+        "n_active": 206,
+        "n_pos": 77,
+        "budget": 64,
+        "peak_gb": 0.0,
+        "trace_id": "tiny_trace_02",
+        "position": 77,
+        "sentence_index": 16,
+        "output_kind": "sentence_token",
+        "conv_ok": true,
+        "conv_jaccard": 1.0,
+        "conv": {
+          "convergence_budget": 32,
+          "node_jaccard": 1.0,
+          "complete": false,
+          "ok": true
+        },
+        "raised": false,
+        "first_attempt": {
+          "budget": 64,
+          "conv": {
+            "convergence_budget": 32,
+            "node_jaccard": 1.0,
+            "complete": false,
+            "ok": true
+          },
+          "seconds": 0.24110360001213849,
+          "peak_gb": 0.0,
+          "n_active": 206
+        },
+        "graph_seconds": 0.24110360001213849,
+        "prefix_offset": 0,
+        "replacement_score": 0.5765193589011636,
+        "completeness_score": 0.8062447785252366,
+        "n_nodes_pruned": 95,
+        "n_feature_nodes_pruned": 2,
+        "n_error_nodes_pruned": 6,
+        "n_edges_pruned": 713,
+        "n_features_graph": 64,
+        "n_errors": 154,
+        "n_tokens": 77,
+        "n_logits": 10,
+        "faithfulness": null,
+        "faithfulness_selected": false,
+        "gpu_seconds": 0.4010311000747606,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_refs/tiny_trace_02/77.pt"
+      }
+    ],
+    "short_prompts": [
+      {
+        "T_D": 38,
+        "N": 58,
+        "n_active": 28,
+        "n_pos": 10,
+        "budget": 7500,
+        "peak_gb": 0.0,
+        "graph_seconds": 1.160777600016445,
+        "replacement_score": 0.6326883798075923,
+        "completeness_score": 0.8387181010720144,
+        "n_nodes_pruned": 26,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 152,
+        "n_features_graph": 28,
+        "n_errors": 20,
+        "n_tokens": 10,
+        "n_logits": 10,
+        "id": "tiny_short_00",
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              9,
+              9
+            ],
+            [
+              0,
+              9,
+              3
+            ],
+            [
+              1,
+              9,
+              3
+            ],
+            [
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              3,
+              11
+            ],
+            [
+              0,
+              8,
+              14
+            ],
+            [
+              0,
+              8,
+              12
+            ],
+            [
+              0,
+              7,
+              0
+            ],
+            [
+              0,
+              8,
+              13
+            ],
+            [
+              0,
+              5,
+              10
+            ]
+          ],
+          "feature_activation": [
+            2.060060501098633,
+            1.9904584884643555,
+            1.8900505304336548,
+            1.0768043994903564,
+            2.292945623397827,
+            2.259169816970825,
+            1.7176235914230347,
+            1.1868834495544434,
+            1.7683662176132202,
+            1.1420977115631104
+          ],
+          "predicted_direct": [
+            -0.059594167676882234,
+            -0.04588377381554652,
+            0.0571104222829782,
+            0.0400741729419352,
+            0.017689497344294217,
+            0.00995070011495258,
+            0.005503895827135926,
+            -0.004397709189516925,
+            -0.008293295262219422,
+            0.005585958929775075
+          ],
+          "predicted_total": [
+            -0.061057900140771074,
+            -0.024364181934929733,
+            0.0571104222829782,
+            0.0315823298430569,
+            0.017109788201307645,
+            0.008276329786163638,
+            0.004666248359668209,
+            -0.00412139955213112,
+            -0.007614332058290811,
+            0.005142775583740934
+          ],
+          "measured": [
+            -0.10300077677041297,
+            0.05365232352121363,
+            0.03950015542323304,
+            -0.005601889635442503,
+            0.007349055668199989,
+            0.0006369322748487338,
+            0.005136066296605679,
+            0.002843479727485554,
+            -0.009849429332886794,
+            0.004981627768853136
+          ],
+          "metric_base": 0.6390384271085242,
+          "spearman_direct": 0.296969696969697,
+          "spearman_total": 0.296969696969697,
+          "seconds": 0.03609509998932481,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "gpu_seconds": 1.2289108000695705,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_short/tiny_short_00.pt"
+      },
+      {
+        "T_D": 68,
+        "N": 94,
+        "n_active": 58,
+        "n_pos": 12,
+        "budget": 7500,
+        "peak_gb": 0.0,
+        "graph_seconds": 0.02032879996113479,
+        "replacement_score": 0.6164946342078621,
+        "completeness_score": 0.8323317678094156,
+        "n_nodes_pruned": 30,
+        "n_feature_nodes_pruned": 5,
+        "n_error_nodes_pruned": 3,
+        "n_edges_pruned": 210,
+        "n_features_graph": 58,
+        "n_errors": 24,
+        "n_tokens": 12,
+        "n_logits": 10,
+        "id": "tiny_short_01",
+        "faithfulness": {
+          "features": [
+            [
+              1,
+              11,
+              11
+            ],
+            [
+              0,
+              10,
+              8
+            ],
+            [
+              0,
+              11,
+              14
+            ],
+            [
+              0,
+              10,
+              14
+            ],
+            [
+              1,
+              11,
+              13
+            ],
+            [
+              1,
+              11,
+              1
+            ],
+            [
+              0,
+              7,
+              2
+            ],
+            [
+              0,
+              7,
+              8
+            ],
+            [
+              0,
+              7,
+              7
+            ],
+            [
+              0,
+              6,
+              12
+            ]
+          ],
+          "feature_activation": [
+            2.015969753265381,
+            2.056471586227417,
+            1.618297815322876,
+            1.8742156028747559,
+            1.1581250429153442,
+            0.8352983593940735,
+            2.4610209465026855,
+            1.8967312574386597,
+            2.1181271076202393,
+            1.4326552152633667
+          ],
+          "predicted_direct": [
+            -0.03104669609118981,
+            0.014054671316413874,
+            -0.02858688789230305,
+            -0.00802164905485292,
+            -0.015211355510725909,
+            0.0027415102554736656,
+            -0.006616623760092537,
+            0.0073665149434138716,
+            0.0031180419498408087,
+            -0.004268619132033943
+          ],
+          "predicted_total": [
+            -0.03104669609118981,
+            0.017021566407058746,
+            -0.024382620781909163,
+            -0.011677504802307363,
+            -0.015211355510725909,
+            0.0027415102554736656,
+            -0.005850118687904891,
+            0.008461858766761145,
+            0.0036250069166684456,
+            -0.0053946622342614615
+          ],
+          "measured": [
+            -0.03742585784842656,
+            -0.04279680433386468,
+            -0.07278650205474968,
+            0.0017676551119271133,
+            -0.008827295447378258,
+            -0.0009328719620580461,
+            -0.006491574635381303,
+            -0.025203444958277865,
+            0.001052544066264094,
+            -0.030216908061714398
+          ],
+          "metric_base": 0.6716063125706702,
+          "spearman_direct": 0.15151515151515152,
+          "spearman_total": 0.15151515151515152,
+          "seconds": 0.04799839993938804,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "gpu_seconds": 0.09146729996427894,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_short/tiny_short_01.pt"
+      },
+      {
+        "T_D": 39,
+        "N": 59,
+        "n_active": 29,
+        "n_pos": 10,
+        "budget": 7500,
+        "peak_gb": 0.0,
+        "graph_seconds": 0.01917670003604144,
+        "replacement_score": 0.6213728547047183,
+        "completeness_score": 0.8366876538526737,
+        "n_nodes_pruned": 27,
+        "n_feature_nodes_pruned": 3,
+        "n_error_nodes_pruned": 4,
+        "n_edges_pruned": 159,
+        "n_features_graph": 29,
+        "n_errors": 20,
+        "n_tokens": 10,
+        "n_logits": 10,
+        "id": "tiny_short_02",
+        "faithfulness": {
+          "features": [
+            [
+              0,
+              9,
+              11
+            ],
+            [
+              1,
+              9,
+              8
+            ],
+            [
+              0,
+              9,
+              4
+            ],
+            [
+              0,
+              3,
+              11
+            ],
+            [
+              1,
+              9,
+              2
+            ],
+            [
+              0,
+              3,
+              7
+            ],
+            [
+              0,
+              8,
+              7
+            ],
+            [
+              0,
+              4,
+              11
+            ],
+            [
+              0,
+              6,
+              9
+            ],
+            [
+              0,
+              7,
+              2
+            ]
+          ],
+          "feature_activation": [
+            2.6976983547210693,
+            1.9200571775436401,
+            1.930663824081421,
+            2.2091574668884277,
+            1.1271220445632935,
+            2.8016014099121094,
+            2.1651201248168945,
+            2.1675381660461426,
+            2.407773971557617,
+            2.1544432640075684
+          ],
+          "predicted_direct": [
+            0.18102430216401355,
+            -0.00840247841883042,
+            -0.0368796612439525,
+            0.04487690575496757,
+            -0.04173194565742193,
+            0.03796495470058916,
+            0.01980410697006373,
+            0.020403422855881703,
+            -0.0039005318679543642,
+            -0.011639578735627652
+          ],
+          "predicted_total": [
+            0.21335602115002966,
+            -0.00840247841883042,
+            -0.02204611454175819,
+            0.04015023750646267,
+            -0.04173194565742193,
+            0.03988261107438444,
+            0.023252871540212584,
+            0.016757342190324948,
+            -0.002816250022141122,
+            -0.012614989862523409
+          ],
+          "measured": [
+            -0.04458410837347693,
+            -0.003568415894107946,
+            -0.05393213159417476,
+            0.008906820835916651,
+            0.015406660484480028,
+            0.009099783566048014,
+            0.0017988247442306537,
+            0.0014851419572838864,
+            -0.019899971875158906,
+            0.005633420221807017
+          ],
+          "metric_base": 0.6642543195611792,
+          "spearman_direct": -0.04242424242424243,
+          "spearman_total": -0.030303030303030304,
+          "seconds": 0.041995500097982585,
+          "metric": "sum_t p_t (logit_t - mean logit), graph logit targets",
+          "intervention": "tiny: replacement_forward feature_scale 0"
+        },
+        "gpu_seconds": 0.07488840003497899,
+        "path": "artifacts/tiny/qwen3_1p7b_plt/premise_short/tiny_short_02.pt"
+      }
+    ]
+  }
+}

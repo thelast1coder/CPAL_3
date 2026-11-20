@@ -131,7 +131,7 @@ def test_gate0_union_tiny_end_to_end():
     with open(os.path.join(ROOT, "results", "tiny", "gate0", "g0b_union.json"), encoding="utf-8") as f:
         res = json.load(f)
     assert set(res) >= {"run", "traces", "beta", "c_median", "n_outputs_without_c", "gpu_seconds"}
-    assert len(res["traces"]) == 2 and math.isfinite(res["beta"])
+    assert len(res["traces"]) == 3 and math.isfinite(res["beta"])
     for t in res["traces"].values():
         assert t["levels_done"] == [1, 2, 4, 8]
         U = [t["U_by_n"][str(n)] for n in t["levels_done"]]

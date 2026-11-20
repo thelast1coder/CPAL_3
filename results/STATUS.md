@@ -1,36 +1,33 @@
 # STATUS
 
 ## Now
-Gate 0 (PROJECT_V2.md Section 7) code, CPU tests and the tiny rehearsal are done. Waiting for:
-Dawar's confirmation of the Gate 0 thresholds (PREREG_GATE0.md, draft), then the GPU VM
-(RTX PRO 6000, 96 GB).
+Gate 0 premise tests (GATE0_PREMISES.md, PR1 to PR11) are coded and checked on the laptop. Waiting
+for the GPU VM (H200 141 GB, or RTX PRO 6000 96 GB). Run: README "VM: Gate 0 premise tests".
 
 ## Done
-- P0 (10 Nov): repository, literature notes (novelty gate passed, Scholar caveat), circuit-tracer
-  0.5.0 notes, all v1 code, CPU tests, tiny kill-test run.
-- Gate 0 code (15 Nov):
-  - `cct/local_part.py`: closed-form A_0; equals the attention-detached backward pass to about 1e-16 on
-    the tiny model (PLT, CLT, skip transcoders).
-  - `cct/reach.py`: attention-rollout reachability and candidate sets.
-  - Backend: attention detaching (K0.7), read-map detection, skip map, attention patterns.
-  - `run_cct` subtracts A_0 before recovery.
-  - Scripts: `gate0_short.py` (G0-A), `gen_traces.py`, `gate0_union.py` (G0-B union growth),
-    `gate0_columns.py` (G0-B columns and screening), `gate0_report.py`, `run_gate0.sh` (job queue).
-  - Tiny rehearsal through the queue: `results/tiny/gate0/GATE0_REPORT.md` (TINY, numbers meaningless).
-- Settled: Gemma PLT repository `mntss/gemma-scope-transcoders` (PROJECT_V2); Qwen3 PLTs
-  `mwhanna/qwen3-1.7b-transcoders-lowl0` (circuit-tracer README); dependency pins (decisions I26).
+- P0 (10 Nov): repository, literature notes, v1 code, CPU tests, tiny kill-test run.
+- Gate 0 premise code (15 to 20 Nov):
+  - Stages A to F: scripts/premise_A.py ... premise_F.py, shared logic in src/cct/premise_*.py,
+    count-sketch decoder src/cct/sketch.py, closed-form A_0 src/cct/local_part.py, reachability
+    src/cct/reach.py, verdict src/cct/premise.py, report scripts/premise_report.py, queue
+    scripts/run_premises.sh (parallel lanes, stop rules, SWITCH-MODEL path).
+  - Speed: pruning and graph scores on the GPU (CCT_PRUNE_DEVICE), vectorised mixed-pass injection.
+  - Checks on 20 Nov: 133 CPU tests pass (127 fast, 6 slow end-to-end, including tiny runs of every
+    stage). Full tiny rehearsal through the queue: stop rules fire as designed (tiny matrices are
+    dense, so the tiny verdict is NO-GO; numbers meaningless).
+- The real-model paths are written against the circuit-tracer 0.5.0 source but have not run on a real
+  model yet; the first minutes of Stage A test them.
 
 ## PREREG commits
-- Kill test draft: 55d84fc (v1; runs after Gate 0 on the GO-BIG path).
-- Gate 0 draft: 60f3720 (thresholds awaiting confirmation); the confirmed hash is recorded here before the first
-  real-model run.
+- Gate 0 premise tests: f53f188, APPROVED by Dawar on 15 Nov 2026 (thresholds fixed).
+- Superseded: Gate 0 draft 60f3720 (PROJECT_V2 Section 7). Kill test draft 55d84fc (v1; after Gate 0).
 
 ## Next (VM)
-README "VM: Gate 0". Expected: about 2 to 2.5 hours of wall-clock time on the VM including setup,
-with a 4-hour ceiling (first real run of the backend). Stop at the report.
+Expected about 4 to 6 hours on an H200 (cap 6 H100-hours), less if a stop rule fires early.
+Then: stop at results/gate0/PREMISE_REPORT.md; Dawar labels the carrier features (Stage F) and decides.
 
 ## Blockers
-- Q5: Dawar confirms the Gate 0 thresholds. Q6: compute cap and whether the GPU is exclusive.
-- Repository visibility: the spec asks for a private repository.
+- None on the code side. Repository visibility: the spec asks for a private repository.
 
 ## Log
+- 20 Nov: premise code checked (133 tests, tiny rehearsal); pushed.

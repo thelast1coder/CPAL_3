@@ -3,20 +3,21 @@
 Read these before doing anything, in this order:
 1. `PROJECT_V2.md`: the current project (big-paper scope, 15 Nov). It supersedes `PROJECT.md` (v1)
    wherever they disagree; v1 is still the reference for anything V2 does not change.
-2. `PREREG_GATE0.md`: the first GPU job (Gate 0), with its thresholds.
+2. `GATE0_PREMISES.md` (replaces PROJECT_V2 Section 7) and `PREREG_GATE0.md` (approved thresholds,
+   commit f53f188): the first GPU job, premise tests PR1 to PR11.
 3. `EXPERIMENTS.md`, `PHASE1_KILL_TEST.md`, `PREREG_KILL_TEST.md`: v1 phases; the short-prompt kill
    test (K0 to K3) runs after Gate 0 on the GO-BIG path (PROJECT_V2 Section 8).
 
 ## Current phase: Gate 0 code ready, waiting for the GPU VM
 Gate 0 code, CPU tests and the tiny rehearsal are done on the laptop. Do not download any model,
-transcoder or dataset on the laptop. Gate 0 runs with `bash scripts/run_gate0.sh` on the VM; stop at
-its report and wait for Dawar's decision (PD-G0).
+transcoder or dataset on the laptop. Gate 0 runs with `bash scripts/run_premises.sh` on the VM; stop
+at results/gate0/PREMISE_REPORT.md and wait for Dawar's decision. GPU cap: 6 H100-hours.
 
 ## Phase status
 | Phase | What | Where | Status |
 |---|---|---|---|
 | P0 | Repo, literature notes, all v1 code, CPU tests, tiny run | laptop | done |
-| Gate 0 code | A_0, reachability, forward-mode columns, G0-A, G0-B, report, prereg draft | laptop | done, prereg awaiting Dawar |
+| Gate 0 code | premise tests PR1 to PR11 (Stages A to F), report, queue | laptop | in progress; prereg approved (f53f188) |
 | Gate 0 run | G0-A and G0-B, report | RTX PRO 6000 VM | waiting for the VM |
 | After Gate 0 | K0 to K3, E1 to E5 (PROJECT_V2 Section 8) | VM | only after GO-BIG and Dawar's confirmation |
 

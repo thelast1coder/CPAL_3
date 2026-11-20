@@ -3,6 +3,7 @@ equality on real graphs). Works on the square adjacency in circuit-tracer's node
 [features, errors, tokens, logits]."""
 from __future__ import annotations
 
+import os
 from typing import NamedTuple
 
 import torch
@@ -21,7 +22,8 @@ class PruneResult(NamedTuple):
 def find_threshold(scores: Tensor, threshold: float) -> Tensor:
     sorted_scores = torch.sort(scores, descending=True).values
     cumulative = torch.cumsum(sorted_scores, dim=0) / torch.sum(sorted_scores)
-    i = int(torch.searchsorted(cumulative, torch.tensor(threshold, dtype=cumulative.dtype)).item())
+    i = int(torch.searchsorted(cumulative, torch.tensor(threshold, dtype=cumulative.dtype,
+                                                        device=cumulative.device)).item())
     i = min(i, len(cumulative) - 1)
     return sorted_scores[i]
 
@@ -34,6 +36,21 @@ def logit_weight_vector(n_nodes: int, logit_probs: Tensor, device=None, dtype=No
 
 def prune_adjacency(adjacency: Tensor, n_features: int, n_tokens: int, logit_probs: Tensor,
                     node_threshold: float = 0.8, edge_threshold: float = 0.98) -> PruneResult:
+    """If the environment variable CCT_PRUNE_DEVICE names a device (e.g. cuda) and the adjacency is on
+    the CPU, pruning runs there (same dtype, same operations) and the result comes back to the CPU; on
+    out-of-memory it falls back to the CPU."""
+    dev = os.environ.get("CCT_PRUNE_DEVICE")
+    if dev and adjacency.device.type == "cpu" and torch.device(dev).type != "cpu":
+        try:
+            r = _prune(adjacency.to(dev), n_features, n_tokens, logit_probs, node_threshold, edge_threshold)
+            return PruneResult(*(x.cpu() for x in r))
+        except torch.cuda.OutOfMemoryError:
+            torch.cuda.empty_cache()
+    return _prune(adjacency, n_features, n_tokens, logit_probs, node_threshold, edge_threshold)
+
+
+def _prune(adjacency: Tensor, n_features: int, n_tokens: int, logit_probs: Tensor,
+           node_threshold: float, edge_threshold: float) -> PruneResult:
     n_logits = logit_probs.numel()
     w = logit_weight_vector(adjacency.shape[0], logit_probs, adjacency.device, adjacency.dtype)
     node_infl = compute_influence(normalize_matrix(adjacency), w)[0]

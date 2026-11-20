@@ -69,13 +69,22 @@ def rel_frobenius_on_edges(A_exact: Tensor, A_approx: Tensor, edge_mask: Tensor)
 
 def graph_scores(adjacency: Tensor, n_features: int, n_errors: int, n_tokens: int,
                  logit_probs: Tensor) -> tuple[float, float]:
-    """Replacement and completeness scores, as circuit-tracer v0.5.0 compute_graph_scores."""
+    """Replacement and completeness scores, as circuit-tracer v0.5.0 compute_graph_scores. Runs on
+    CCT_PRUNE_DEVICE when set (see cct.graph.prune.prune_adjacency), falling back to the CPU."""
+    import os
+
+    dev = os.environ.get("CCT_PRUNE_DEVICE")
+    if dev and adjacency.device.type == "cpu" and torch.device(dev).type != "cpu":
+        try:
+            return graph_scores(adjacency.to(dev), n_features, n_errors, n_tokens, logit_probs)
+        except torch.cuda.OutOfMemoryError:
+            torch.cuda.empty_cache()
     n = adjacency.shape[0]
     n_logits = logit_probs.numel()
     error_start, error_end = n_features, n_features + n_errors
     token_end = error_end + n_tokens
-    w = torch.zeros(n, dtype=adjacency.dtype)
-    w[-n_logits:] = logit_probs.to(adjacency.dtype)
+    w = torch.zeros(n, dtype=adjacency.dtype, device=adjacency.device)
+    w[-n_logits:] = logit_probs.to(adjacency.device, adjacency.dtype)
     Abar = normalize_matrix(adjacency)
     infl = compute_influence(Abar, w)[0]
     tok = infl[error_end:token_end].sum()

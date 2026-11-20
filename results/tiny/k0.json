@@ -65,7 +65,7 @@
   },
   "seed": 0,
   "git": {
-    "hash": "7ecc83534940a9584abc8d56b440c36e96076fa4",
+    "hash": "f53f188a52f12d2704e08f9c7e93c4f0b84a1736",
     "dirty": true
   },
   "packages": {
@@ -81,8 +81,8 @@
     "yaml": "6.0.3"
   },
   "gpu": "cpu (AMD64)",
-  "wall_seconds": 18.065976199985016,
-  "utc": "2026-11-15T10:42:26+00:00",
+  "wall_seconds": 7.515657200012356,
+  "utc": "2026-11-20T12:41:56+00:00",
   "sets": {
     "tiny_plt": {
       "checks": {
@@ -105,10 +105,10 @@
         },
         "K0.5": {
           "value": {
-            "row_seconds": 0.0007128843744794722,
-            "kappa": 2.4302898015868624,
+            "row_seconds": 0.0002921109371527564,
+            "kappa": 3.5362207259063947,
             "batch": 64,
-            "recovery_columns_per_second": 506.57002523572027
+            "recovery_columns_per_second": 1023.8724254779257
           },
           "pass": true
         },
@@ -118,10 +118,10 @@
         }
       },
       "timing": {
-        "row_seconds": 0.0007128843744794722,
-        "kappa": 2.4302898015868624,
+        "row_seconds": 0.0002921109371527564,
+        "kappa": 3.5362207259063947,
         "batch": 64,
-        "recovery_columns_per_second": 506.57002523572027
+        "recovery_columns_per_second": 1023.8724254779257
       },
       "dtype": "float64"
     }

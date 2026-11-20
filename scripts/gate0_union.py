@@ -119,8 +119,9 @@ class Builder:
             return
         t0 = time.perf_counter()
         if self.args.tiny:
-            kt = su.load_yaml(os.path.join(su.ROOT, "configs", "experiments", "kill_test.yaml"))
-            self.model = su.tiny_model(kt, "tiny_plt")
+            from cct.premise_traces import tiny_premise_model  # same tiny model as gen_traces --tiny
+
+            self.model = tiny_premise_model()
         else:
             from cct.operators.circuit_tracer_backend import load_replacement_model
             from cct.utils.gpu import cap_memory, nvidia_smi

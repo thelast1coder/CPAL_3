@@ -131,7 +131,39 @@ class CircuitTracerOperator(OperatorMixin):
 
     # -- injections ----------------------------------------------------------------------------
     def _injections(self, seeds: Tensor) -> dict[int, Tensor]:
-        """Per layer, a dense [B, n_pos, d] additive gradient (B = cached forward batch)."""
+        """Per layer, a dense [B, n_pos, d] additive gradient (B = cached forward batch), built with one
+        sparse-dense product over (batch row, layer, position) locations: R[b, l, p] =
+        sum over feature targets t at (l, p) of seed[b, t] e_t. Equal to _injections_loop (test)."""
+        B = self.ctx._resid_activations[0].shape[0]
+        b = seeds.shape[0]
+        d = self.enc_vecs.shape[1]
+        k, L, n = self.n_logits, self.n_layers, self.n_pos
+        out: dict[int, Tensor] = {}
+        if k:
+            inj = torch.zeros(B, n, d, device=self.device, dtype=self.dtype)
+            inj[:b, n - 1] = seeds[:, :k].to(self.dtype) @ self.logit_vecs
+            out[L] = inj
+        X = seeds[:, k:].to(self.device)
+        bi, ti = torch.nonzero(X, as_tuple=True)
+        if bi.numel() == 0:
+            return out
+        tl = self.target_meta.layer[k:].to(self.device)
+        tp = self.target_meta.pos[k:].to(self.device)
+        layers = torch.unique(tl[ti])
+        lmap = torch.full((L + 1,), -1, dtype=torch.long, device=self.device)
+        lmap[layers] = torch.arange(layers.numel(), device=self.device)
+        nl = layers.numel()
+        rows = (bi * nl + lmap[tl[ti]]) * n + tp[ti]
+        S = torch.sparse_coo_tensor(torch.stack([rows, ti]), X[bi, ti].float(), (b * nl * n, X.shape[1]))
+        R = torch.sparse.mm(S, self.enc_vecs.float()).view(b, nl, n, d).to(self.dtype)
+        for j, l in enumerate(layers.tolist()):
+            inj = torch.zeros(B, n, d, device=self.device, dtype=self.dtype)
+            inj[:b] = R[:, j]
+            out[int(l)] = inj
+        return out
+
+    def _injections_loop(self, seeds: Tensor) -> dict[int, Tensor]:
+        """Reference implementation of _injections (one matmul per (layer, position))."""
         B = self.ctx._resid_activations[0].shape[0]
         b = seeds.shape[0]
         d = self.enc_vecs.shape[1]

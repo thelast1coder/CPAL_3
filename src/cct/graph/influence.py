@@ -32,11 +32,11 @@ def partial_influences(edge_rows: Tensor, logit_p: Tensor, row_to_node: Tensor, 
     edge_rows [r, n_nodes] (rows computed so far), row_to_node [r] node index of each row."""
     M = edge_rows.abs()
     M = M / M.sum(dim=1, keepdim=True).clamp(min=1e-8)
-    infl = torch.zeros(edge_rows.shape[1], dtype=M.dtype)
-    prod = torch.zeros(edge_rows.shape[1], dtype=M.dtype)
+    infl = torch.zeros(edge_rows.shape[1], dtype=M.dtype, device=M.device)
+    prod = torch.zeros(edge_rows.shape[1], dtype=M.dtype, device=M.device)
     prod[-logit_p.numel():] = logit_p.to(M.dtype)
     for _ in range(max_iter):
-        prod = prod[row_to_node.long()] @ M
+        prod = prod[row_to_node.long().to(M.device)] @ M
         if not bool(prod.any()):
             break
         infl += prod
